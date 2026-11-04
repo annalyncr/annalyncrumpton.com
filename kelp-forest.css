@@ -1,0 +1,480 @@
+/* Kelp forest aquarium: layout, atmosphere, and navigation captions. */
+:root {
+  color-scheme: dark;
+  --ocean: #102f3b;
+  --cream: #f3eee6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--ocean);
+}
+
+body {
+  font-family: "Geist", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#aquarium {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+  isolation: isolate;
+  color: var(--cream);
+  background: linear-gradient(180deg, #183f4b 0%, #164653 34%, #0d303d 72%, #09232e 100%);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#kelp-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+}
+
+#aquarium::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(184, 221, 205, 0.10), transparent 18%),
+    radial-gradient(100% 75% at 50% 40%, transparent 45%, rgba(3, 15, 22, 0.28) 100%);
+}
+
+#aquarium::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background: linear-gradient(180deg, transparent 76%, rgba(3, 16, 22, 0.34));
+}
+
+.center {
+  position: absolute;
+  inset: 0 0 7svh;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 24px);
+  padding: 0 24px;
+  text-align: center;
+  pointer-events: none;
+  /* Lift the title block so italic descenders (especially the y) stay visible. */
+  transform: translateY(-clamp(55px, 10vh, 85px));;
+}
+
+.center::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: min(1000px, 96vw);
+  height: min(46svh, 420px);
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(5, 24, 30, 0.56), rgba(5, 24, 30, 0.22) 60%, transparent);
+}
+
+.title {
+  position: relative;
+  margin: 0;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: clamp(56px, 11.5vw, 184px);
+  font-weight: 400;
+  /* Extra leading gives the italic name room for its descender. */
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+  color: #f3eee6;
+  text-shadow: 0 2px 22px rgba(8, 22, 24, 0.6), 0 12px 60px rgba(8, 22, 24, 0.5);
+}
+
+.hi,
+.name {
+  display: inline-block;
+}
+
+.name {
+  font-style: italic;
+  padding-right: 0.06em;
+  background: linear-gradient(100deg, #fffdf0 5%, #f7e4a0 50%, #e9c45f 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: clamp(13px, 1.5vw, 18px);
+  letter-spacing: 0.06em;
+  color: rgba(250, 236, 240, 0.9);
+  text-shadow: 0 1px 14px rgba(8, 22, 24, 0.85);
+}
+
+.reveal {
+  animation: reveal 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+  animation-delay: calc(0.25s + var(--i, 0) * 0.16s);
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+    filter: blur(14px);
+  }
+}
+
+.links {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.aquarium-link {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 15px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(var(--tint), 0.17), rgba(10, 34, 42, 0.78) 72%);
+  border: 1px solid rgba(var(--tint), 0.56);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -50%) translateY(8px);
+  transition: opacity 0.55s ease, transform 0.55s ease, background 0.2s, border-color 0.2s;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.aquarium-link.is-visible {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.aquarium-link:hover,
+.aquarium-link:focus-visible {
+  background: linear-gradient(135deg, rgba(var(--tint), 0.28), rgba(10, 34, 42, 0.9) 72%);
+  border-color: rgba(var(--tint), 0.95);
+}
+
+.aquarium-link:focus-visible {
+  outline: 2px solid rgb(var(--tint));
+  outline-offset: 4px;
+}
+
+.scene-note {
+  position: absolute;
+  z-index: 3;
+  right: 22px;
+  bottom: 18px;
+  color: rgba(222, 237, 228, 0.52);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+
+/* Interactive underwater field guide */
+.field-guide {
+  position: absolute;
+  z-index: 8;
+  right: clamp(16px, 4vw, 48px);
+  bottom: clamp(48px, 8vh, 82px);
+  width: min(320px, calc(100vw - 32px));
+  padding: 22px 24px 20px;
+  border: 1px solid rgba(218, 232, 210, 0.38);
+  border-radius: 18px;
+  color: #f3eee6;
+  background: linear-gradient(145deg, rgba(20, 57, 64, 0.94), rgba(7, 31, 41, 0.94));
+  box-shadow: 0 18px 55px rgba(0, 12, 18, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  user-select: text;
+  -webkit-user-select: text;
+  animation: guide-in 260ms ease both;
+}
+.field-guide[hidden] { display: none; }
+.field-guide-kicker {
+  margin: 0 28px 8px 0;
+  color: #c5d6b1;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.field-guide h2 {
+  margin: 0 24px 9px 0;
+  font: italic 30px/1.05 "Instrument Serif", Georgia, serif;
+  color: #f6e8bd;
+}
+.field-guide p:not(.field-guide-kicker) {
+  margin: 0;
+  color: rgba(243, 238, 230, 0.88);
+  font-size: 13px;
+  line-height: 1.65;
+}
+.field-guide-hint {
+  display: block;
+  margin-top: 14px;
+  color: rgba(207, 224, 211, 0.58);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+.field-guide-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(243, 238, 230, 0.25);
+  border-radius: 50%;
+  color: #f3eee6;
+  background: rgba(255, 255, 255, 0.08);
+  font: 22px/1 "Geist", sans-serif;
+  cursor: pointer;
+}
+.field-guide-close:hover,
+.field-guide-close:focus-visible {
+  background: rgba(255, 255, 255, 0.18);
+  outline: 2px solid #d8e2c3;
+  outline-offset: 2px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+@keyframes guide-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 600px) {
+  .field-guide {
+    right: 12px;
+    bottom: 42px;
+    width: min(290px, calc(100vw - 24px));
+    padding: 18px 20px 16px;
+  }
+  .field-guide h2 { font-size: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .field-guide { animation: none; }
+}
+
+@media (max-width: 600px) {
+  #aquarium {
+    min-height: 520px;
+  }
+
+  .title {
+    font-size: clamp(48px, 12vw, 76px);
+  }
+
+  .subtitle {
+    max-width: 300px;
+    line-height: 1.6;
+  }
+
+  .aquarium-link {
+    padding: 8px 11px;
+    font-size: 12px;
+  }
+
+  .scene-note {
+    right: 12px;
+    bottom: 12px;
+    font-size: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+  }
+
+  .aquarium-link {
+    transition: none;
+  }
+}
+
+
+/* About pop-up opened by the starfish on the sand. */
+.about-popup {
+  position: absolute;
+  z-index: 12;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(520px, calc(100vw - 34px));
+  max-height: min(76svh, 620px);
+  overflow-y: auto;
+  padding: 30px 34px 28px;
+  border: 1px solid rgba(231, 218, 184, 0.52);
+  border-radius: 22px;
+  color: #f3eee6;
+  background: linear-gradient(145deg, rgba(23, 65, 69, 0.97), rgba(8, 34, 43, 0.97));
+  box-shadow: 0 24px 90px rgba(0, 10, 16, 0.58);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  user-select: text;
+  -webkit-user-select: text;
+  animation: guide-in 280ms ease both;
+}
+.about-popup[hidden] { display: none; }
+.about-popup h2 {
+  margin: 0 28px 16px 0;
+  color: #f5dfaa;
+  font: italic 38px/1.05 "Instrument Serif", Georgia, serif;
+}
+.about-popup #about-copy {
+  margin: 0;
+  color: rgba(243, 238, 230, 0.91);
+  font-size: 14px;
+  line-height: 1.8;
+}
+.about-contact {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 9px 14px;
+  border: 1px solid rgba(221, 206, 163, 0.55);
+  border-radius: 999px;
+  color: #f5dfaa;
+  font-size: 12px;
+  text-decoration: none;
+  transition: background 180ms ease;
+}
+.about-contact:hover, .about-contact:focus-visible { background: rgba(245, 223, 170, 0.12); }
+@media (max-width: 600px) {
+  .about-popup { padding: 26px 22px 22px; }
+  .about-popup h2 { font-size: 32px; }
+  .about-popup #about-copy { font-size: 13px; line-height: 1.7; }
+}
+@media (prefers-reduced-motion: reduce) { .about-popup { animation: none; } }
+
+
+/* Small hover labels for the three clickable seafloor objects. */
+.aquarium-hotspot::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 9px);
+  transform: translate(-50%, 4px);
+  padding: 7px 11px;
+  border: 1px solid rgba(232, 220, 190, 0.38);
+  border-radius: 999px;
+  color: #f5eee0;
+  background: rgba(7, 31, 39, 0.91);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.25);
+  font: 500 11px/1.2 "Geist", sans-serif;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 160ms ease, transform 160ms ease, visibility 160ms ease;
+}
+.aquarium-hotspot:hover::after,
+.aquarium-hotspot:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+.aquarium-hotspot:focus-visible {
+  outline: 1px solid rgba(245, 223, 170, 0.9);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+.aquarium-chest-link::after { bottom: calc(100% + 7px); }
+.aquarium-starfish-hotspot::after { bottom: calc(100% + 3px); }
+@media (prefers-reduced-motion: reduce) {
+  .aquarium-hotspot::after { transition: none; }
+}
+
+
+/* Treasure chest favorites window. */
+.favorites-popup {
+  position: fixed; z-index: 1000; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(470px, calc(100vw - 34px)); max-height: calc(100vh - 32px); overflow-y: auto;
+  max-height: calc(100dvh - 32px);
+  overscroll-behavior: contain; scrollbar-gutter: stable;
+  padding: 30px 34px 28px; border: 1px solid rgba(231,218,184,.55); border-radius: 22px;
+  color: #f3eee6; background: linear-gradient(145deg, rgba(31,67,67,.98), rgba(8,34,43,.98));
+  box-shadow: 0 24px 90px rgba(0,10,16,.58); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  user-select: text; -webkit-user-select: text; animation: guide-in 280ms ease both;
+}
+.favorites-popup[hidden] { display: none; }
+.favorites-popup h2 { margin: 0 28px 10px 0; color: #f5dfaa; font: italic 38px/1.05 "Instrument Serif", Georgia, serif; }
+.favorites-intro { margin: 0 0 17px; color: rgba(243,238,230,.84); font-size: 13px; line-height: 1.6; }
+.favorites-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 9px; }
+.favorites-list li { display: flex; flex-direction: column; gap: 4px; padding: 11px 13px; border: 1px solid rgba(221,206,163,.2); border-radius: 12px; background: rgba(255,255,255,.045); }
+.favorites-list span { color: #d9c58f; font-size: 10px; letter-spacing: .13em; text-transform: uppercase; }
+.favorites-list strong { color: rgba(243,238,230,.94); font-size: 13px; font-weight: 400; }
+@media (max-width: 600px) { .favorites-popup { padding: 25px 22px 22px; } .favorites-popup h2 { font-size: 32px; } }
+@media (prefers-reduced-motion: reduce) { .favorites-popup { animation: none; } }
+
+/* Gentle glow for clickable seafloor objects and link hotspots. */
+.aquarium-hotspot:hover, .aquarium-hotspot:focus-visible {
+  filter: drop-shadow(0 0 7px rgba(185, 245, 228, .95)) drop-shadow(0 0 15px rgba(126, 225, 215, .75));
+}
+.aquarium-hotspot { transition: filter 180ms ease; }
+.aquarium-bottle-hotspot::after { bottom: calc(100% + 5px); }
+
+
+/* Top-corner panels and compact site menu. */
+.favorites-popup, .sound-popup { left: clamp(14px, 2.4vw, 30px); top: clamp(14px, 2.4vw, 30px); right: auto; bottom: auto; transform: none; width: min(390px, calc(100vw - 28px)); max-height: calc(100dvh - 28px); }
+.sound-popup { position: fixed; z-index: 1001; padding: 26px 28px 24px; border: 1px solid rgba(218,232,210,.45); border-radius: 20px; color: #f3eee6; background: linear-gradient(145deg,rgba(31,67,67,.98),rgba(8,34,43,.98)); box-shadow: 0 20px 70px rgba(0,10,16,.55); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); animation: guide-in 260ms ease both; }
+.sound-popup[hidden], .site-menu-popup[hidden] { display:none; }
+.sound-popup h2, .site-menu-popup h2 { margin:0 28px 14px 0; color:#f5dfaa; font:italic 34px/1.05 "Instrument Serif",Georgia,serif; }
+.sound-label { display:block; margin:13px 0 7px; color:#d9c58f; font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
+.sound-popup select { width:100%; padding:10px 12px; color:#f3eee6; background:#183d46; border:1px solid rgba(221,206,163,.35); border-radius:10px; font:13px Geist,sans-serif; }
+.sound-controls { display:flex; gap:9px; margin:13px 0 6px; }
+.sound-controls button, .quick-menu-actions button { padding:9px 13px; color:#f3eee6; background:rgba(255,255,255,.08); border:1px solid rgba(221,206,163,.28); border-radius:10px; font:12px Geist,sans-serif; cursor:pointer; }
+.sound-controls button:hover, .quick-menu-actions button:hover { background:rgba(255,255,255,.16); }
+#sound-volume { width:100%; accent-color:#d8c58f; }
+.sound-note { margin:10px 0 0; color:rgba(243,238,230,.58); font-size:10px; line-height:1.5; }
+.site-menu-button { position:absolute; z-index:1100; top:clamp(16px,2.4vw,28px); right:clamp(16px,2.4vw,28px); width:42px; height:42px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; padding:8px; border:1px solid rgba(255,255,255,.22); border-radius:50%; background:rgba(7,31,41,.36); backdrop-filter:blur(8px); cursor:pointer; }
+.site-menu-button span { display:block; width:17px; height:1.5px; border-radius:2px; background:#fff; }
+.site-menu-button:hover, .site-menu-button:focus-visible { background:rgba(255,255,255,.15); outline:2px solid rgba(232,239,224,.7); outline-offset:3px; }
+.site-menu-popup { position:fixed; z-index:1099; top:clamp(66px,7vw,82px); right:clamp(14px,2.4vw,30px); width:min(280px,calc(100vw - 28px)); max-height:calc(100dvh - 100px); overflow:auto; padding:23px 22px 20px; border:1px solid rgba(218,232,210,.42); border-radius:18px; color:#f3eee6; background:linear-gradient(145deg,rgba(31,67,67,.98),rgba(8,34,43,.98)); box-shadow:0 20px 70px rgba(0,10,16,.55); backdrop-filter:blur(18px); }
+.quick-menu-links { display:grid; gap:6px; list-style:none; padding:0; margin:0 0 12px; }
+.quick-menu-links a { display:block; padding:8px 10px; border-radius:9px; color:#f3eee6; text-decoration:none; font-size:13px; background:rgba(255,255,255,.045); }
+.quick-menu-links a:hover { background:rgba(255,255,255,.12); }
+.quick-menu-actions { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+.quick-menu-actions button { text-align:left; }
+.aquarium-shell-hotspot::after { bottom:calc(100% + 5px); }
+@media(max-width:600px) { .favorites-popup,.sound-popup { padding:24px 21px 21px; } .site-menu-popup { top:65px; } }
+@media(prefers-reduced-motion:reduce) { .sound-popup { animation:none; } }

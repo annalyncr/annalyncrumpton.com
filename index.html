@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>the kelp forest</title>
+  <meta name="description" content="welcome to my kelp forest :)">
+  <meta name="theme-color" content="#102F3B">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+  <link rel="stylesheet" href="kelp-forest.css">
+</head>
+<body>
+  <main id="aquarium" aria-label="An animated underwater kelp forest">
+    <canvas id="kelp-canvas" aria-hidden="true"></canvas>
+    <div class="center">
+      <h1 class="title">
+        <span class="hi reveal" style="--i: 0">hi, i’m</span>
+        <span class="name reveal" style="--i: 1">annalyn</span>
+      </h1>
+      <p class="subtitle reveal" style="--i: 2">dive deeper</p>
+    </div>
+    <button id="site-menu-button" class="site-menu-button" type="button" aria-label="Open site menu" aria-expanded="false" aria-controls="site-menu-popup"><span></span><span></span><span></span></button>
+    <section id="site-menu-popup" class="site-menu-popup" role="dialog" aria-label="Explore the site" hidden>
+      <button class="field-guide-close" id="site-menu-close" type="button" aria-label="Close menu">×</button>
+      <p class="field-guide-kicker">find your way</p><h2>explore</h2>
+      <ul id="quick-menu-links" class="quick-menu-links"></ul>
+      <div class="quick-menu-actions">
+        <button type="button" data-menu-action="favorites">my favorites</button>
+        <button type="button" data-menu-action="about">about me</button>
+        <button type="button" data-menu-action="inspiration">inspiration</button>
+        <button type="button" data-menu-action="sound">ambient sounds</button>
+        <button type="button" data-menu-action="livecam">kelp forest live cam</button>
+      </div>
+    </section>
+    <nav class="links" id="aquarium-links" aria-label="Explore">
+      <!-- Navigation links are added by kelp-forest.js. -->
+    </nav>
+    <section class="field-guide" id="field-guide" role="dialog" aria-labelledby="field-guide-title" aria-describedby="field-guide-description" aria-modal="false" hidden>
+      <button class="field-guide-close" id="field-guide-close" type="button" aria-label="Close creature guide">×</button>
+      <p class="field-guide-kicker">underwater field guide</p>
+      <h2 id="field-guide-title">A visitor from the kelp forest</h2>
+      <p id="field-guide-description">Click a creature to learn more about it.</p>
+      <span class="field-guide-hint">click another creature to explore</span>
+    </section>
+    <section class="favorites-popup" id="favorites-popup" role="dialog" aria-labelledby="favorites-title" aria-modal="false" hidden>
+      <button class="field-guide-close" id="favorites-close" type="button" aria-label="Close favorites">×</button>
+      <p class="field-guide-kicker">a few of my favorite things</p>
+      <h2 id="favorites-title">little treasures</h2>
+      <p class="favorites-intro">A tiny collection of things I love!!</p>
+      <ul class="favorites-list">
+        <li><span>books</span><strong>beartown, little women, januaries</strong></li>
+        <li><span>music</span><strong>sarah kinsley, kevian kraemer, 5SOS</strong></li>
+        <li><span>movies</span><strong>the little mermaid</strong></li>
+        <li><span>places</span><strong>panera</strong></li>
+        <li><span>little things</span><strong>lemonade, hoodies, and bunnies</strong></li>
+      </ul>
+    </section>
+    <section class="sound-popup" id="sound-popup" role="dialog" aria-labelledby="sound-title" aria-modal="false" hidden>
+      <button class="field-guide-close" id="sound-close" type="button" aria-label="Close sound player">×</button>
+      <p class="field-guide-kicker">a little ocean atmosphere</p><h2 id="sound-title">listen awhile</h2>
+      <label class="sound-label" for="sound-mode">soundscape</label>
+      <select id="sound-mode">
+        <option value="ocean">Ocean waves</option>
+        <option value="dreamscape">Underwater dreamscape</option>
+        <option value="guitar">Calm guitar</option>
+      </select>      <div class="sound-controls"><button id="sound-play" type="button">play</button><button id="sound-mute" type="button">mute</button></div>
+      <label class="sound-label" for="sound-volume">volume</label><input id="sound-volume" type="range" min="0" max="1" step="0.01" value="0.35">
+      <p class="sound-note">Audio starts only when you press play.</p>
+    </section>
+    <section class="about-popup" id="about-popup" role="dialog" aria-labelledby="about-title" aria-describedby="about-copy" aria-modal="false" hidden>
+      <button class="field-guide-close" id="about-close" type="button" aria-label="Close about window">×</button>
+      <p class="field-guide-kicker">a little about me</p>
+      <h2 id="about-title">hello, i'm annalyn</h2>
+      <p id="about-copy">Hi! I’m Annalyn Crumpton, a junior studying Data Science and Statistics at the University of North Carolina at Chapel Hill. I am currently pursuing Data Analytics and Actuarial roles with the hopes to apply my skills and knowledge from coursework to real business problems. I’m also minoring in English here at UNC and have a passion for all things dystopian and in the world of general fiction. Outside of work and school, I love music, aquariums, and Cheerwine. I’m always looking to make more connections, so feel free to reach out!</p>
+      <a class="about-contact" href="mailto:annalynjcrumpton@gmail.com">let's connect ↗</a>
+    </section>
+    <p class="sr-only" id="creature-help">Explore the aquarium: click the treasure chest for favorites, the seashell for ambient sound, the message bottle for about, the starfish for inspiration, or a fish to learn about it.</p>
+    <div class="scene-note" aria-hidden="true">annalyn's corner of the ocean</div>
+  </main>
+
+  <script src="kelp-forest.js"></script>
+  <script>
+    const links = [
+      {
+        label: "say hi",
+        href: "mailto:annalynjcrumpton@gmail.com",
+        fish: "opaleye",
+        x: 0.73,
+        y: 0.40,
+        tint: "#9DCDB5",
+        ink: "#F5F4EF"
+      },
+      {
+        label: "linkedin",
+        href: "https://www.linkedin.com/in/annalyn-crumpton/",
+        fish: "senorita",
+        x: 0.24,
+        y: 0.57,
+        tint: "#9DCDB5",
+        ink: "#FFF0C9"
+      },
+      {
+        label: "spotify",
+        href: "https://open.spotify.com/user/bananalyn_?si=6f05dc71cc564bc4",
+        fish: "anchovy",
+        x: 0.78,
+        y: 0.72,
+        tint: "#9DCDB5",
+        ink: "#E8F5EC"
+      },
+      {
+        label: "pdf merger",
+        href: "/Users/annalyn/Downloads/apps/pdf_merger.html",
+        fish: "rockfish",
+        x: 0.40,
+        y: 0.82,
+        tint: "#9DCDB5",
+        ink: "#FFE8DF"
+      }
+    ];
+
+      const crab = {
+      href: "https://www.youtube.com/watch?v=w3LjpFhySTg",
+      label: "Visit my page"
+    };
+
+      const inspirationUrl = "https://www.youtube.com/watch?v=w3LjpFhySTg";
+
+    KelpForest.create(document.getElementById("aquarium"), {
+      links,
+      crab,
+      inspirationUrl,
+      kelpCount: 17,
+      fishCount: 11,
+      bubbleCount: 34
+    });
+  </script>
+</body>
+</html>
