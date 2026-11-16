@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF MERGER // TYPEWRITER EDITION</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Courier Prime & Special Elite -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+  
+  <!-- pdf-lib CDN -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+  <style>
+    :root {
+      --paper-bg: #f4f1ea;
+      --paper-sheet: #faf8f3;
+      --ink-black: #1c1b18;
+      --ink-muted: #6e6a63;
+      --ribbon-red: #b8332a;
+    }
+
+    body {
+      background-color: var(--paper-bg);
+      color: var(--ink-black);
+      font-family: 'Courier Prime', 'Courier New', monospace;
+      background-image: radial-gradient(rgba(28, 27, 24, 0.06) 1px, transparent 0);
+      background-size: 20px 20px;
+    }
+
+    .title-font {
+      font-family: 'Special Elite', 'Courier Prime', monospace;
+      letter-spacing: 0.08em;
+    }
+
+    /* Tactile Mechanical Typewriter Key Effect */
+    .mech-btn {
+      background-color: var(--paper-sheet);
+      color: var(--ink-black);
+      border: 2px solid var(--ink-black);
+      box-shadow: 3px 3px 0px var(--ink-black);
+      transition: transform 0.06s ease, box-shadow 0.06s ease, background-color 0.1s ease;
+      user-select: none;
+    }
+
+    .mech-btn:hover:not(:disabled) {
+      background-color: #ebe6da;
+    }
+
+    .mech-btn:active:not(:disabled) {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--ink-black);
+    }
+
+    .mech-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: 1px 1px 0px var(--ink-black);
+      transform: translate(2px, 2px);
+    }
+
+    /* Primary Dark Key */
+    .mech-btn-primary {
+      background-color: var(--ink-black);
+      color: var(--paper-sheet);
+      border: 2px solid var(--ink-black);
+      box-shadow: 4px 4px 0px var(--ink-muted);
+      transition: transform 0.06s ease, box-shadow 0.06s ease, background-color 0.1s ease;
+    }
+
+    .mech-btn-primary:hover:not(:disabled) {
+      background-color: #302e29;
+    }
+
+    .mech-btn-primary:active:not(:disabled) {
+      transform: translate(3px, 3px);
+      box-shadow: 1px 1px 0px var(--ink-muted);
+    }
+
+    .mech-btn-primary:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Red Ribbon Accent Key */
+    .mech-btn-danger:hover:not(:disabled) {
+      background-color: var(--ribbon-red);
+      color: var(--paper-sheet);
+      border-color: var(--ribbon-red);
+    }
+
+    /* Paper Sheet Container */
+    .paper-sheet {
+      background-color: var(--paper-sheet);
+      border: 2px solid var(--ink-black);
+      box-shadow: 8px 8px 0px rgba(28, 27, 24, 0.15);
+    }
+
+    /* Dropzone Active State */
+    .dropzone-active {
+      background-color: #e8e2d5 !important;
+      border-color: var(--ribbon-red) !important;
+    }
+
+    /* Drag & Drop Row States */
+    .file-row {
+      transition: background-color 0.12s ease, opacity 0.12s ease;
+    }
+
+    .file-row.dragging {
+      opacity: 0.4;
+      background-color: #e5dfd2;
+    }
+
+    .file-row.drag-over-top {
+      border-top: 2px dashed var(--ribbon-red);
+    }
+
+    .file-row.drag-over-bottom {
+      border-bottom: 2px dashed var(--ribbon-red);
+    }
+
+    /* Custom Typewriter Input */
+    .typewriter-input {
+      background: transparent;
+      border-bottom: 2px solid var(--ink-black);
+      outline: none;
+      color: var(--ink-black);
+    }
+
+    .typewriter-input:focus {
+      border-bottom-color: var(--ribbon-red);
+    }
+  </style>
+</head>
+<body class="min-h-screen py-8 px-4 sm:px-6 flex flex-col items-center justify-start">
+
+  <!-- Main Paper Sheet -->
+  <main class="w-full max-w-2xl paper-sheet rounded-sm p-6 sm:p-10 my-auto">
+    
+    <!-- Header / Document Stamp -->
+    <header class="border-b-2 border-[#1c1b18] pb-4 mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+      <div>
+        <p class="text-xs uppercase tracking-widest text-[#6e6a63] mb-1">FORM NO. 104-PDF // CLIENT-SIDE UTILITY</p>
+        <h1 class="title-font text-2xl sm:text-3xl font-bold tracking-wider uppercase">PDF MANUSCRIPT MERGER</h1>
+      </div>
+      <div class="text-xs text-[#6e6a63] sm:text-right font-bold">
+        [LOCAL PROCESSING ONLY]
+      </div>
+    </header>
+
+    <!-- Status / Error Ribbon Notification -->
+    <div id="statusBox" class="hidden mb-6 p-3 border-2 border-[#b8332a] bg-[#f9eceb] text-[#b8332a] text-sm rounded-sm flex items-center justify-between">
+      <span id="statusText"></span>
+      <button id="closeStatusBtn" class="font-bold ml-4 hover:underline text-xs uppercase">[DISMISS]</button>
+    </div>
+
+    <!-- Step 1: Dropzone -->
+    <section class="mb-8">
+      <div class="flex items-center justify-between mb-2">
+        <label class="text-xs font-bold uppercase tracking-wider text-[#6e6a63]">01. INSERT DOCUMENTS</label>
+        <span class="text-xs text-[#6e6a63]">ACCEPTS MULTIPLE .PDF FILES</span>
+      </div>
+
+      <div 
+        id="dropzone" 
+        tabindex="0"
+        role="button"
+        aria-label="Upload PDF files"
+        class="border-2 border-dashed border-[#1c1b18] rounded-sm p-8 text-center cursor-pointer transition-colors hover:bg-[#f0ece1] focus:outline-none focus:ring-2 focus:ring-[#1c1b18]"
+      >
+        <input type="file" id="fileInput" multiple accept="application/pdf,.pdf" class="hidden">
+        <div class="text-base sm:text-lg font-bold mb-1 tracking-wide">
+          [ CLICK TO SELECT FILES OR DRAG & DROP HERE ]
+        </div>
+        <p class="text-xs text-[#6e6a63]">
+          Files remain strictly on your machine and are never uploaded to any server.
+        </p>
+      </div>
+    </section>
+
+    <!-- Step 2: Queue / Reorder List -->
+    <section id="queueSection" class="mb-8 hidden">
+      <div class="flex items-center justify-between mb-2 border-b border-[#1c1b18] pb-1">
+        <label class="text-xs font-bold uppercase tracking-wider text-[#6e6a63]">
+          02. MANUSCRIPT SEQUENCE (DRAG OR USE ARROWS)
+        </label>
+        <button 
+          id="clearAllBtn" 
+          type="button"
+          class="text-xs text-[#b8332a] hover:underline font-bold uppercase tracking-wider"
+        >
+          [CLEAR ALL]
+        </button>
+      </div>
+
+      <!-- List Container -->
+      <ul id="fileList" class="divide-y divide-[#1c1b18]/30 border-b-2 border-[#1c1b18] mb-3">
+        <!-- Populated dynamically via JS -->
+      </ul>
+
+      <!-- Summary Tally -->
+      <div class="flex justify-between items-center text-xs text-[#6e6a63] font-bold">
+        <span id="summaryCount">0 FILES QUEUED</span>
+        <span id="summaryPages">TOTAL: 0 PAGES</span>
+      </div>
+    </section>
+
+    <!-- Step 3: Output Configuration & Merge Action -->
+    <section id="actionSection" class="hidden pt-2">
+      <div class="mb-6">
+        <label for="outputFilename" class="block text-xs font-bold uppercase tracking-wider text-[#6e6a63] mb-2">
+          03. OUTPUT FILE DESIGNATION
+        </label>
+        <div class="flex items-baseline gap-1">
+          <span class="text-sm font-bold select-none">&gt;</span>
+          <input 
+            type="text" 
+            id="outputFilename" 
+            value="merged-document.pdf" 
+            placeholder="merged-document.pdf"
+            class="typewriter-input w-full py-1 px-1 text-base font-bold"
+          >
+        </div>
+      </div>
+
+      <button 
+        id="mergeBtn" 
+        type="button"
+        class="mech-btn-primary w-full py-3.5 px-6 rounded-sm font-bold text-base sm:text-lg tracking-widest uppercase flex items-center justify-center gap-3"
+      >
+        <span id="mergeBtnText">MERGE DOCUMENTS</span>
+      </button>
+    </section>
+
+    <!-- Empty State Footnote -->
+    <footer id="emptyStateNote" class="text-center py-6 text-xs text-[#6e6a63] border-t border-dashed border-[#1c1b18]/30">
+      NO DOCUMENTS CURRENTLY IN CARRIAGE. INSERT AT LEAST 2 PDF FILES TO MERGE.
+    </footer>
+
+  </main>
+
+  <script>
+    // Application State
+    let pdfQueue = []; // Array of { id, file, name, size, pageCount }
+    let draggedIndex = null;
+
+    // DOM Elements
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const queueSection = document.getElementById('queueSection');
+    const actionSection = document.getElementById('actionSection');
+    const emptyStateNote = document.getElementById('emptyStateNote');
+    const fileList = document.getElementById('fileList');
+    const summaryCount = document.getElementById('summaryCount');
+    const summaryPages = document.getElementById('summaryPages');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const outputFilenameInput = document.getElementById('outputFilename');
+    const mergeBtn = document.getElementById('mergeBtn');
+    const mergeBtnText = document.getElementById('mergeBtnText');
+    const statusBox = document.getElementById('statusBox');
+    const statusText = document.getElementById('statusText');
+    const closeStatusBtn = document.getElementById('closeStatusBtn');
+
+    // Utility: Format bytes to human-readable string
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      const kb = bytes / 1024;
+      if (kb < 1024) return kb.toFixed(1) + ' KB';
+      const mb = kb / 1024;
+      return mb.toFixed(2) + ' MB';
+    }
+
+    // Utility: Display Status or Error Ribbon
+    function showStatus(message, isError = true) {
+      statusText.textContent = message;
+      statusBox.classList.remove('hidden');
+      if (isError) {
+        statusBox.className = 'mb-6 p-3 border-2 border-[#b8332a] bg-[#f9eceb] text-[#b8332a] text-sm rounded-sm flex items-center justify-between';
+      } else {
+        statusBox.className = 'mb-6 p-3 border-2 border-[#1c1b18] bg-[#ebe6da] text-[#1c1b18] text-sm rounded-sm flex items-center justify-between';
+      }
+    }
+
+    function hideStatus() {
+      statusBox.classList.add('hidden');
+    }
+
+    closeStatusBtn.addEventListener('click', hideStatus);
+
+    // Handle File Selection & Inspection via pdf-lib
+    async function handleFiles(fileListArray) {
+      hideStatus();
+      const files = Array.from(fileListArray);
+      if (files.length === 0) return;
+
+      const rejectedFiles = [];
+
+      for (const file of files) {
+        const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+        if (!isPdf) {
+          rejectedFiles.push(`${file.name} (Not a PDF)`);
+          continue;
+        }
+
+        try {
+          const arrayBuffer = await file.arrayBuffer();
+          const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: false });
+          const pageCount = pdfDoc.getPageCount();
+
+          pdfQueue.push({
+            id: crypto.randomUUID ? crypto.randomUUID() : 'pdf-' + Date.now() + '-' + Math.random(),
+            file: file,
+            name: file.name,
+            size: formatFileSize(file.size),
+            pageCount: pageCount
+          });
+        } catch (err) {
+          console.error('Error reading PDF:', file.name, err);
+          rejectedFiles.push(`${file.name} (Encrypted or corrupted)`);
+        }
+      }
+
+      if (rejectedFiles.length > 0) {
+        showStatus(`UNABLE TO LOAD: ${rejectedFiles.join(', ')}`, true);
+      }
+
+      // Reset file input so selecting the same file again still triggers change
+      fileInput.value = '';
+      renderQueue();
+    }
+
+    // Render Queue List & Update Controls
+    function renderQueue() {
+      fileList.innerHTML = '';
+
+      if (pdfQueue.length === 0) {
+        queueSection.classList.add('hidden');
+        actionSection.classList.add('hidden');
+        emptyStateNote.classList.remove('hidden');
+        return;
+      }
+
+      queueSection.classList.remove('hidden');
+      actionSection.classList.remove('hidden');
+      emptyStateNote.classList.add('hidden');
+
+      let totalPages = 0;
+
+      pdfQueue.forEach((item, index) => {
+        totalPages += item.pageCount;
+
+        const li = document.createElement('li');
+        li.className = 'file-row py-3 px-2 flex items-center justify-between gap-2 cursor-grab active:cursor-grabbing rounded-sm';
+        li.draggable = true;
+        li.dataset.index = index;
+
+        // Drag & Drop Events for Reordering
+        li.addEventListener('dragstart', (e) => {
+          draggedIndex = index;
+          li.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+
+        li.addEventListener('dragend', () => {
+          li.classList.remove('dragging');
+          draggedIndex = null;
+          document.querySelectorAll('.file-row').forEach(row => {
+            row.classList.remove('drag-over-top', 'drag-over-bottom');
+          });
+        });
+
+        li.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          if (draggedIndex === null || draggedIndex === index) return;
+          e.dataTransfer.dropEffect = 'move';
+
+          const rect = li.getBoundingClientRect();
+          const midY = rect.top + rect.height / 2;
+          li.classList.remove('drag-over-top', 'drag-over-bottom');
+          if (e.clientY < midY) {
+            li.classList.add('drag-over-top');
+          } else {
+            li.classList.add('drag-over-bottom');
+          }
+        });
+
+        li.addEventListener('dragleave', () => {
+          li.classList.remove('drag-over-top', 'drag-over-bottom');
+        });
+
+        li.addEventListener('drop', (e) => {
+          e.preventDefault();
+          li.classList.remove('drag-over-top', 'drag-over-bottom');
+          if (draggedIndex === null || draggedIndex === index) return;
+
+          const rect = li.getBoundingClientRect();
+          const midY = rect.top + rect.height / 2;
+          let targetIndex = e.clientY < midY ? index : index + 1;
+
+          const [movedItem] = pdfQueue.splice(draggedIndex, 1);
+          if (draggedIndex < targetIndex) {
+            targetIndex -= 1;
+          }
+          pdfQueue.splice(targetIndex, 0, movedItem);
+          draggedIndex = null;
+          renderQueue();
+        });
+
+        // Index Number (01., 02., etc.)
+        const indexNumber = String(index + 1).padStart(2, '0') + '.';
+        const pageLabel = item.pageCount === 1 ? '1 PAGE' : `${item.pageCount} PAGES`;
+
+        li.innerHTML = `
+          <div class="flex items-center gap-3 min-w-0 flex-1">
+            <span class="text-sm font-bold text-[#6e6a63] select-none w-7 shrink-0">${indexNumber}</span>
+            <div class="min-w-0 flex-1">
+              <p class="text-sm sm:text-base font-bold truncate" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</p>
+              <p class="text-xs text-[#6e6a63]">${pageLabel} &bull; ${item.size}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button 
+              type="button" 
+              class="mech-btn w-7 h-7 rounded-sm text-xs font-bold flex items-center justify-center" 
+              title="Move Up"
+              aria-label="Move ${escapeHtml(item.name)} up"
+              ${index === 0 ? 'disabled' : ''}
+              data-action="up"
+            >&uarr;</button>
+            <button 
+              type="button" 
+              class="mech-btn w-7 h-7 rounded-sm text-xs font-bold flex items-center justify-center" 
+              title="Move Down"
+              aria-label="Move ${escapeHtml(item.name)} down"
+              ${index === pdfQueue.length - 1 ? 'disabled' : ''}
+              data-action="down"
+            >&darr;</button>
+            <button 
+              type="button" 
+              class="mech-btn mech-btn-danger w-7 h-7 rounded-sm text-sm font-bold flex items-center justify-center text-[#b8332a]" 
+              title="Remove File"
+              aria-label="Remove ${escapeHtml(item.name)}"
+              data-action="remove"
+            >&times;</button>
+          </div>
+        `;
+
+        // Button Action Listeners
+        const upBtn = li.querySelector('[data-action="up"]');
+        const downBtn = li.querySelector('[data-action="down"]');
+        const removeBtn = li.querySelector('[data-action="remove"]');
+
+        upBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          moveItem(index, index - 1);
+        });
+
+        downBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          moveItem(index, index + 1);
+        });
+
+        removeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          removeItem(index);
+        });
+
+        fileList.appendChild(li);
+      });
+
+      // Update Summary Bar
+      summaryCount.textContent = `${pdfQueue.length} ${pdfQueue.length === 1 ? 'FILE' : 'FILES'} QUEUED`;
+      summaryPages.textContent = `TOTAL: ${totalPages} ${totalPages === 1 ? 'PAGE' : 'PAGES'}`;
+
+      // Update Merge Button State
+      if (pdfQueue.length < 2) {
+        mergeBtn.disabled = true;
+        mergeBtnText.textContent = 'ADD AT LEAST 2 PDFS TO MERGE';
+      } else {
+        mergeBtn.disabled = false;
+        mergeBtnText.textContent = `MERGE ${pdfQueue.length} DOCUMENTS (${totalPages} PAGES)`;
+      }
+    }
+
+    // Escape HTML helper to prevent XSS in filenames
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, function(m) {
+        return ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        })[m];
+      });
+    }
+
+    // Move Item in Queue
+    function moveItem(fromIndex, toIndex) {
+      if (toIndex < 0 || toIndex >= pdfQueue.length) return;
+      const [moved] = pdfQueue.splice(fromIndex, 1);
+      pdfQueue.splice(toIndex, 0, moved);
+      renderQueue();
+    }
+
+    // Remove Single Item
+    function removeItem(index) {
+      pdfQueue.splice(index, 1);
+      renderQueue();
+    }
+
+    // Clear All Items
+    clearAllBtn.addEventListener('click', () => {
+      pdfQueue = [];
+      hideStatus();
+      renderQueue();
+    });
+
+    // Dropzone Click & Keyboard Interaction
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        fileInput.click();
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      handleFiles(e.target.files);
+    });
+
+    // Dropzone Drag & Drop Events
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('dropzone-active');
+    });
+
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.classList.remove('dropzone-active');
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dropzone-active');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleFiles(e.dataTransfer.files);
+      }
+    });
+
+    // Merge & Download Action
+    mergeBtn.addEventListener('click', async () => {
+      if (pdfQueue.length < 2) return;
+      hideStatus();
+
+      try {
+        mergeBtn.disabled = true;
+        mergeBtnText.textContent = 'COLLATING & BINDING PAGES...';
+
+        const mergedPdf = await PDFLib.PDFDocument.create();
+
+        for (const item of pdfQueue) {
+          const arrayBuffer = await item.file.arrayBuffer();
+          const sourcePdf = await PDFLib.PDFDocument.load(arrayBuffer);
+          const pageIndices = sourcePdf.getPageIndices();
+          const copiedPages = await mergedPdf.copyPages(sourcePdf, pageIndices);
+          copiedPages.forEach((page) => mergedPdf.addPage(page));
+        }
+
+        const mergedBytes = await mergedPdf.save();
+
+        // Prepare Output Filename
+        let outName = outputFilenameInput.value.trim() || 'merged-document.pdf';
+        if (!outName.toLowerCase().endsWith('.pdf')) {
+          outName += '.pdf';
+        }
+
+        // Trigger Browser Download
+        const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = outName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+        showStatus(`SUCCESS: "${outName}" HAS BEEN MERGED AND DOWNLOADED.`, false);
+      } catch (err) {
+        console.error('Error merging PDFs:', err);
+        showStatus('ERROR: FAILED TO MERGE DOCUMENTS. ENSURE NO FILES ARE PASSWORD-PROTECTED.', true);
+      } finally {
+        renderQueue();
+      }
+    });
+  </script>
+</body>
+</html>
