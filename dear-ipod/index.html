@@ -92,15 +92,6 @@ body {
 
 /* SCREEN BEZEL */
 
-/*
-  The screen is now taller within the iPod body.
-  Its height is tied to the iPod itself, rather than
-  being calculated from the screen's width.
-
-  This keeps the screen proportions consistent on
-  desktop and mobile displays.
-*/
-
 .bezel {
   width: 100%;
   height: 42%;
@@ -504,22 +495,30 @@ body {
   }
 }
 
-/* DESKTOP SCREEN SIZE ADJUSTMENT */
+/* DESKTOP SCREEN DIMENSIONS */
+
+/*
+  Based on the real 7th-generation iPod Classic:
+
+  Body: approximately 2.4 x 4.1 inches
+  Screen: 2.5-inch diagonal, 320 x 240 pixels
+
+  The inner illuminated screen is approximately
+  83% of the body width and 37% of its height.
+
+  The bezel padding is accounted for below.
+*/
 
 @media (min-width: 481px) {
 
   .bezel {
     position: absolute;
 
-    /* Expand screen horizontally */
-    width: 92%;
-    left: 4%;
+    width: 86.5%;
+    height: 38%;
 
-    /* Expand screen vertically */
-    height: 48%;
-
-    /* Keep the screen centered in its original position */
-    top: 3.5%;
+    left: 6.75%;
+    top: 6.5%;
   }
 
 }
