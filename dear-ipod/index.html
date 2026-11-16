@@ -438,6 +438,7 @@ body {
   line-height: 1.5;
   overflow-wrap: anywhere;
   scrollbar-width: thin;
+  overscroll-behavior: contain;
 }
 
 .article-view[hidden],
@@ -1586,12 +1587,15 @@ function render() {
 
    Selection stops at the first and last
    items instead of looping around.
+
+   The previous/next buttons still use this
+   function to move between posts while reading.
 ========================================= */
 
 function moveSelection(direction) {
 
-  // While reading, previous/next moves
-  // between blog posts.
+  // While reading, previous/next buttons
+  // move between blog posts.
 
   if (currentView.type === "article") {
 
@@ -1641,12 +1645,35 @@ function moveSelection(direction) {
 
   selectedIndex = nextSelection;
 
-  // Update artwork as soon as the selection moves.
   updateArtworkFromSelection();
 
   playClick();
 
   render();
+
+}
+
+
+/* =========================================
+   SCROLL ARTICLE WITH THE CLICK WHEEL
+
+   Positive direction scrolls down.
+   Negative direction scrolls up.
+
+   This is separate from moveSelection()
+   so rotating the wheel never changes
+   blog posts while reading.
+========================================= */
+
+function scrollArticle(direction) {
+
+  if (currentView.type !== "article") {
+    return;
+  }
+
+  const scrollAmount = 45;
+
+  articleView.scrollTop += direction * scrollAmount;
 
 }
 
@@ -1771,7 +1798,17 @@ wheel.addEventListener("pointermove", event => {
 
   while (angleAccumulator >= 20) {
 
-    moveSelection(1);
+    if (currentView.type === "article") {
+
+      // In an article, rotate to scroll DOWN.
+      scrollArticle(1);
+
+    } else {
+
+      // In a menu, rotate to move DOWN the list.
+      moveSelection(1);
+
+    }
 
     angleAccumulator -= 20;
 
@@ -1779,7 +1816,17 @@ wheel.addEventListener("pointermove", event => {
 
   while (angleAccumulator <= -20) {
 
-    moveSelection(-1);
+    if (currentView.type === "article") {
+
+      // In an article, rotate to scroll UP.
+      scrollArticle(-1);
+
+    } else {
+
+      // In a menu, rotate to move UP the list.
+      moveSelection(-1);
+
+    }
 
     angleAccumulator += 20;
 
