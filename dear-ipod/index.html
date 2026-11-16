@@ -95,7 +95,10 @@ body {
 
 .bezel {
   width: 100%;
-  height: 39%;
+
+  /* Larger screen, same overall iPod dimensions */
+  height: 46%;
+
   padding: 1.8%;
   border-radius: 4.5%;
   background: linear-gradient(145deg, #111, #303132 50%, #111);
@@ -531,7 +534,6 @@ body {
             <img
               class="album-art"
               id="album-art"
-              src="album-cover.png"
               alt="Featured blog post artwork"
             >
 
@@ -624,6 +626,28 @@ body {
 
 const CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vTb04rRYskV66irmkGkGYi7jH9k0EevD9ZEmBt56kgCYvBtFoJ4XeyQeiAlsIL-IyspbEC5vK2vusI4/pub?gid=0&single=true&output=csv";
+
+
+/*
+   ALBUM COVER LOCATION
+
+   This assumes you have an "covers" folder
+   in the same folder as this HTML page.
+
+   Example:
+   dear-ipod/
+     index.html
+     covers/
+       001.png
+       002.png
+       003.png
+
+   If your covers are instead in the same folder
+   as this HTML file, change "covers/" to "./".
+*/
+
+const COVER_BASE_PATH = "covers/";
+
 
 // Blog data
 
@@ -736,7 +760,39 @@ function parseCSV(text) {
 
 
 /* =========================================
+   ALBUM COVER URL
+========================================= */
+
+function getCoverUrl(cover) {
+
+  if (!cover || !cover.trim()) {
+    return "";
+  }
+
+  const value = cover.trim();
+
+  // Use a complete URL if one is entered in the sheet.
+
+  if (/^https?:\/\//i.test(value)) {
+    return value;
+  }
+
+  // Otherwise, treat it as a filename in the cover folder.
+
+  return new URL(
+    COVER_BASE_PATH + value.replace(/^\/+/, ""),
+    document.baseURI
+  ).href;
+
+}
+
+
+/* =========================================
    CONVERT SHEET ROWS INTO POSTS
+
+   Expected Google Sheets columns:
+
+   id | title | date | category | tags | content | cover
 ========================================= */
 
 function convertRows(rows) {
@@ -753,13 +809,13 @@ function convertRows(rows) {
 
       return {
 
-        id: row.id || String(index + 1),
+        id: row.id || String(index + 1).padStart(3, "0"),
 
-        title: row.title,
+        title: row.title.trim(),
 
-        date: row.date,
+        date: row.date.trim(),
 
-        category: row.category || "Uncategorized",
+        category: (row.category || "Uncategorized").trim(),
 
         tags: (row.tags || "")
           .split(/[,;|]/)
@@ -771,7 +827,7 @@ function convertRows(rows) {
           .map(paragraph => paragraph.trim())
           .filter(Boolean),
 
-        cover: row.cover || "album-cover.png"
+        cover: getCoverUrl(row.cover)
 
       };
 
@@ -805,18 +861,20 @@ async function loadPosts() {
     posts = convertRows(rows);
 
     if (posts.length === 0) {
-      throw new Error("No valid blog posts found. Check your column headers and data.");
+      throw new Error(
+        "No valid blog posts found. Check your column headers and data."
+      );
     }
 
-    // Most recent post
+    // The first post after sorting is the newest post.
 
     latestPost = posts[0];
 
-    // Update artwork
+    // Show the newest post's cover on the homepage.
 
     updateArtwork(latestPost);
 
-    // Refresh homepage
+    // Refresh homepage.
 
     history = [];
     showHome();
@@ -958,6 +1016,13 @@ function goBack() {
   currentView = history.pop();
   selectedIndex = 0;
 
+  // If returning to the homepage, restore
+  // the newest post's album cover.
+
+  if (currentView.key === "home") {
+    updateArtwork(latestPost);
+  }
+
   playClick();
   render();
 
@@ -989,6 +1054,10 @@ function showHome() {
   history = [];
   selectedIndex = 0;
 
+  // Always show the newest post's artwork on home.
+
+  updateArtwork(latestPost);
+
   render();
 
 }
@@ -1000,14 +1069,38 @@ function showHome() {
 
 function updateArtwork(post) {
 
-  if (!post || !post.cover) return;
+  currentPost = post || null;
 
-  albumArt.src = post.cover;
+  if (!post || !post.cover) {
+
+    albumArt.removeAttribute("src");
+    albumArt.style.display = "none";
+    albumArt.alt = "No album cover available";
+
+    return;
+
+  }
+
+  albumArt.alt = `Cover for ${post.title}`;
   albumArt.style.display = "block";
-
-  currentPost = post;
+  albumArt.src = post.cover;
 
 }
+
+
+// Hide the image if its file cannot be found.
+// The colored background behind it will remain visible.
+
+albumArt.addEventListener("error", () => {
+
+  albumArt.style.display = "none";
+
+  console.warn(
+    "Album cover could not be loaded:",
+    albumArt.src
+  );
+
+});
 
 
 /* =========================================
@@ -1018,6 +1111,8 @@ function openPost(post) {
 
   if (!post) return;
 
+  updateArtwork(post);
+
   navigate({
 
     type: "article",
@@ -1026,8 +1121,6 @@ function openPost(post) {
     post: post
 
   });
-
-  updateArtwork(post);
 
 }
 
@@ -1461,7 +1554,7 @@ function render() {
   });
 
 
-  // Keep selected item visible
+  // Keep selected item visible.
 
   const selected = menu.querySelector(".selected");
 
@@ -1516,7 +1609,7 @@ function moveSelection(direction) {
   }
 
 
-  // Menu navigation
+  // Menu navigation.
 
   const length = currentView.items.length;
 
@@ -1536,7 +1629,7 @@ function moveSelection(direction) {
    BUTTON EVENTS
 ========================================= */
 
-// Center button
+// Center button.
 
 selectButton.addEventListener("click", () => {
 
@@ -1551,12 +1644,12 @@ selectButton.addEventListener("click", () => {
 });
 
 
-// MENU button
+// MENU button.
 
 menuButton.addEventListener("click", goBack);
 
 
-// Previous button
+// Previous button.
 
 previousButton.addEventListener("click", () => {
 
@@ -1565,7 +1658,7 @@ previousButton.addEventListener("click", () => {
 });
 
 
-// Next button
+// Next button.
 
 nextButton.addEventListener("click", () => {
 
@@ -1574,7 +1667,7 @@ nextButton.addEventListener("click", () => {
 });
 
 
-// Play button
+// Play button.
 
 playButton.addEventListener("click", () => {
 
