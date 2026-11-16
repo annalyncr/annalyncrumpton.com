@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f6f1e8">
+<title>annalyn's wishlist</title>
+<style>
+  :root {
+    --paper: #f6f1e8;
+    --ink: #38312b;
+    --muted: #887c6e;
+    --line: rgba(75, 61, 47, .15);
+    --card: #fbf8f2;
+    --shadow: 0 18px 45px rgba(63, 48, 34, .14);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    overflow-x: hidden;
+  }
+  .page {
+    position: relative;
+    min-height: 100svh;
+    width: 100%;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 5; opacity: .12;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+  .heading {
+    position: absolute;
+    z-index: 2;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(430px, 40vw);
+    text-align: center;
+    pointer-events: none;
+  }
+  h1 {
+    margin: 0;
+    font-family: "Iowan Old Style", "Baskerville", "Times New Roman", serif;
+    font-weight: 400;
+    font-size: clamp(48px, 6.1vw, 88px);
+    line-height: .94;
+    letter-spacing: -.055em;
+  }
+  .subtitle {
+    margin-top: 17px;
+    color: var(--muted);
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 14px;
+    letter-spacing: .035em;
+  }
+  .items { position: absolute; inset: 0; z-index: 3; }
+  .item {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    transform: translate(-50%, -50%) rotate(var(--rotate, 0deg));
+    transform-origin: center;
+    transition: transform .28s cubic-bezier(.2,.8,.2,1), filter .28s ease;
+    filter: drop-shadow(0 8px 7px rgba(59, 45, 31, .12));
+    -webkit-tap-highlight-color: transparent;
+  }
+  .item:hover, .item:focus-visible {
+    z-index: 4;
+    transform: translate(-50%, -54%) rotate(var(--rotate, 0deg)) scale(1.09);
+    filter: drop-shadow(0 16px 13px rgba(59, 45, 31, .20)) drop-shadow(0 0 13px rgba(187, 153, 111, .18));
+    outline: none;
+  }
+  .item svg, .item img { width: 100%; height: 100%; overflow: visible; object-fit: contain; }
+  .item:focus-visible { outline: 1px dashed #8d7962; outline-offset: 8px; border-radius: 12px; }
+  .hint {
+    position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%);
+    color: #9a8d7d; font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+    white-space: nowrap; z-index: 2;
+  }
+  .modal-backdrop {
+    position: fixed; inset: 0; z-index: 10; display: none; place-items: center;
+    padding: 22px; background: rgba(48, 40, 32, .24); backdrop-filter: blur(5px);
+  }
+  .modal-backdrop.open { display: grid; }
+  .modal {
+    position: relative; width: min(410px, 100%); padding: 34px 34px 30px;
+    text-align: center;
+    background: var(--card); border: 1px solid rgba(94, 75, 55, .13);
+    box-shadow: 0 24px 80px rgba(43, 34, 25, .22);
+    animation: arrive .22s ease-out;
+  }
+  @keyframes arrive { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+  .close {
+    position: absolute; right: 15px; top: 13px; border: 0; background: transparent;
+    color: var(--muted); font-size: 23px; cursor: pointer; line-height: 1;
+  }
+  .modal-kicker { color: #9b8975; text-transform: uppercase; letter-spacing: .17em; font-size: 9px; }
+  .modal-art { width: 112px; height: 112px; margin: 16px auto 12px; display: grid; place-items: center; }
+  .modal-art svg, .modal-art img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 8px 7px rgba(59,45,31,.12)); }
+  .modal h2 {
+    font-family: "Iowan Old Style", Baskerville, Georgia, serif; font-size: 36px;
+    font-weight: 400; letter-spacing: -.035em; margin: 10px 0 5px;
+  }
+  .price { color: #786b5c; font-size: 13px; margin-bottom: 22px; }
+  .notes { color: #655b50; font-family: Georgia, serif; font-size: 14px; line-height: 1.65; }
+  .buy {
+    display: inline-block; margin-top: 25px; padding-bottom: 4px; border-bottom: 1px solid #8b7862;
+    color: var(--ink); text-decoration: none; font-size: 11px; letter-spacing: .11em; text-transform: uppercase;
+  }
+  .buy:hover { color: #967a5b; }
+  @media (max-width: 700px) {
+    .page { min-height: 100svh; padding: 40px 20px 62px; overflow: visible; }
+    .heading {
+      position: relative; left: auto; top: auto; transform: none; width: 100%;
+      margin: 7vh auto 28px;
+    }
+    h1 { font-size: clamp(48px, 13vw, 70px); }
+    .subtitle { margin-top: 12px; font-size: 13px; }
+    .items {
+      position: relative; inset: auto; display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: center; justify-items: center; gap: 23px 12px;
+      max-width: 540px; margin: 0 auto;
+    }
+    .item {
+      position: relative; left: auto !important; top: auto !important;
+      width: min(var(--mobile-w), 42vw) !important;
+      height: var(--mobile-h) !important;
+      max-height: 170px;
+      transform: rotate(var(--rotate, 0deg));
+    }
+    .item:hover, .item:focus-visible { transform: translateY(-4px) rotate(var(--rotate, 0deg)) scale(1.05); }
+    .hint { position: relative; left: auto; bottom: auto; transform: none; text-align: center; margin: 35px auto 0; }
+  }
+  @media (max-width: 390px) {
+    .items { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 22px; }
+    .item { max-width: 42vw; max-height: 150px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+<main class="page" id="page">
+  <div class="heading">
+    <h1>annalyn's<br>wishlist</h1>
+    <div class="subtitle">a little collection of things i love</div>
+  </div>
+  <div class="items" id="items" aria-label="Wishlist items"></div>
+  <div class="hint" id="hint">click an object to take a closer look</div>
+  <div class="grain" aria-hidden="true"></div>
+</main>
+
+<div class="modal-backdrop" id="backdrop" role="presentation">
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="close" id="close" aria-label="Close dialog">&times;</button>
+    <div class="modal-kicker">a wishlist note</div>
+    <div class="modal-art" id="modal-art" aria-hidden="true"></div>
+    <h2 id="modal-title"></h2>
+    <div class="price" id="modal-price"></div>
+    <div class="notes" id="modal-notes"></div>
+    <a class="buy" id="modal-link" href="#" target="_blank" rel="noopener">find it here ↗</a>
+  </section>
+</div>
+
+<script>
+const FEED_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRF09o1m-_VbrMa7vVBU2fAQYM64gH_GIJfYuwuHO5dJLsqhDChtybqdPsqqi5AwBzqOwqljc4clZuM/pub?gid=1460111631&single=true&output=csv";
+let wishlist = [];
+
+// Object sizes give larger everyday objects more room than small accessories.
+const sizeByCategory = {
+  clothing: [190, 195], apparel: [190, 195], hoodie: [190, 195],
+  bag: [190, 158], handbag: [190, 158], shoes: [190, 150],
+  tech: [178, 135], electronics: [178, 135], camera: [178, 126],
+  beauty: [132, 178], perfume: [132, 188], book: [122, 174], books: [122, 174],
+  jewelry: [105, 110], earrings: [105, 110], accessories: [145, 110],
+  home: [145, 155], decor: [145, 155]
+};
+const fallbackSizes = [150, 150];
+function sizeFor(category) {
+  const key = String(category || '').trim().toLowerCase();
+  return sizeByCategory[key] || fallbackSizes;
+}
+function parseCSV(text) {
+  // Handles quoted commas, escaped quotes, line breaks inside cells, and UTF-8 BOMs.
+  text = String(text || '').replace(/^\uFEFF/, '');
+  const rows = []; let row = [], cell = '', quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (c === '"' && quoted && text[i + 1] === '"') { cell += '"'; i++; }
+    else if (c === '"') quoted = !quoted;
+    else if (c === ',' && !quoted) { row.push(cell.trim()); cell = ''; }
+    else if ((c === '\n' || c === '\r') && !quoted) {
+      if (c === '\r' && text[i + 1] === '\n') i++;
+      row.push(cell.trim()); if (row.some(v => v !== '')) rows.push(row);
+      row = []; cell = '';
+    } else cell += c;
+  }
+  if (cell.length || row.length) { row.push(cell.trim()); rows.push(row); }
+  if (!rows.length) return [];
+  const headers = rows.shift().map(h => h.trim().toLowerCase());
+  return rows.map(values => Object.fromEntries(headers.map((h, i) => [h, values[i] ?? ''])));
+}
+function truthy(value) { return ['true', 'yes', '1', 'y', 'active'].includes(String(value || '').trim().toLowerCase()); }
+function normalizeItem(row, index) {
+  const category = row.category || '';
+  const [w, h] = sizeFor(category);
+  const name = row.name || `Wishlist item ${index + 1}`;
+  const id = row.id || `wishlist-${index + 1}`;
+  let image = (row.image || '').trim();
+  // Root-relative paths such as /assets/wishlist/photo.png work on the custom domain.
+  // Plain filenames are resolved inside the wishlist image folder.
+  if (image && !/^(https?:|data:|\/)/i.test(image)) image = `assets/wishlist/${image.replace(/^\.\//, '')}`;
+  return { id, name, price: row.price || '', notes: row.notes || '', link: row.link || '', image, category, w, h, r: ((index * 7) % 13) - 6 };
+}
+
+const art = {
+perfume:`<svg viewBox="0 0 120 170" aria-hidden="true"><defs><linearGradient id="glass" x2="1"><stop stop-color="#b9c0ad"/><stop offset=".5" stop-color="#e8e0ca"/><stop offset="1" stop-color="#929b83"/></linearGradient><linearGradient id="liquid" x2="0" y2="1"><stop stop-color="#d8bd8a"/><stop offset="1" stop-color="#9b7045"/></linearGradient></defs><ellipse cx="60" cy="158" rx="34" ry="5" fill="#8a755e" opacity=".15"/><rect x="46" y="12" width="28" height="22" rx="4" fill="#b5a17d"/><rect x="42" y="4" width="36" height="13" rx="3" fill="#6b6253"/><rect x="25" y="34" width="70" height="116" rx="15" fill="url(#glass)" stroke="#8e8d78" stroke-width="2"/><path d="M28 95h64v40q0 12-13 12H41q-13 0-13-12z" fill="url(#liquid)" opacity=".65"/><rect x="34" y="72" width="52" height="38" rx="2" fill="#eee5d3" stroke="#a99b82"/><text x="60" y="87" font-size="7" text-anchor="middle" fill="#695a47" font-family="Georgia">EAU DE</text><text x="60" y="97" font-size="8" text-anchor="middle" fill="#695a47" font-family="Georgia">PARFUM</text></svg>`,
+camera:`<svg viewBox="0 0 170 120" aria-hidden="true"><ellipse cx="84" cy="103" rx="66" ry="6" fill="#8a755e" opacity=".16"/><path d="M24 35q0-8 10-8h25l9-13h35l10 13h23q10 0 10 10v53q0 9-10 9H34q-10 0-10-9z" fill="#b9b9ae" stroke="#77766e" stroke-width="2"/><path d="M32 36h106v54H32z" fill="#d8d6ca"/><circle cx="85" cy="63" r="27" fill="#575c5b" stroke="#777b75" stroke-width="4"/><circle cx="85" cy="63" r="19" fill="#253c43"/><circle cx="85" cy="63" r="12" fill="#53727a"/><circle cx="79" cy="56" r="5" fill="#c3d0c8" opacity=".65"/><rect x="42" y="19" width="22" height="7" rx="2" fill="#77766e"/><circle cx="129" cy="35" r="4" fill="#a66e51"/><text x="85" y="96" font-size="6" text-anchor="middle" fill="#68665e">SONY</text></svg>`,
+handbag:`<svg viewBox="0 0 170 145" aria-hidden="true"><ellipse cx="84" cy="131" rx="65" ry="6" fill="#8a755e" opacity=".16"/><path d="M39 57q0-35 45-35t45 35" fill="none" stroke="#594b3c" stroke-width="8" stroke-linecap="round"/><path d="M20 61q0-9 12-9h104q12 0 13 11l-8 62q-2 9-13 9H40q-11 0-13-10z" fill="#88745d" stroke="#594b3c" stroke-width="2"/><path d="M27 70h118l-5 40H32z" fill="#a38d70"/><path d="M56 53h58v34H56z" fill="#c4ae8c" stroke="#665744" stroke-width="2"/><path d="M85 54v31" stroke="#665744" stroke-width="2"/><circle cx="85" cy="94" r="5" fill="#d6bd88"/><path d="M36 112q48 11 96 0" fill="none" stroke="#665744" opacity=".55"/></svg>`,
+book:`<svg viewBox="0 0 120 165" aria-hidden="true"><ellipse cx="60" cy="157" rx="42" ry="5" fill="#8a755e" opacity=".16"/><path d="M18 12q35-8 43 4v133q-13-12-43-5z" fill="#6e302d" stroke="#4f2827" stroke-width="2"/><path d="M61 16q9-12 42-4v132q-28-7-42 5z" fill="#8b4540" stroke="#4f2827" stroke-width="2"/><path d="M60 17v131" stroke="#d6bda0" stroke-width="3"/><path d="M28 35h25M28 42h25M72 35h22" stroke="#d4b98f" stroke-width="1.5" opacity=".8"/><text x="60" y="76" font-family="Georgia" font-size="10" fill="#e8d8b8" text-anchor="middle">A GOOD</text><text x="60" y="89" font-family="Georgia" font-size="10" fill="#e8d8b8" text-anchor="middle">STORY</text><path d="M31 112h59" stroke="#d4b98f" opacity=".7"/></svg>`,
+sunglasses:`<svg viewBox="0 0 150 95" aria-hidden="true"><path d="M10 28q5-11 21-10l35 5q10 2 8 14l-6 27q-3 12-17 10L22 69Q9 65 9 51z" fill="#6b4935" stroke="#3e3027" stroke-width="3"/><path d="M78 37q-2-13 9-14l36-4q16-1 18 11l-1 23q-1 15-15 17l-29 4q-13 1-15-12z" fill="#6b4935" stroke="#3e3027" stroke-width="3"/><path d="M73 36q4-8 9 0" fill="none" stroke="#3e3027" stroke-width="5"/><path d="M16 31l49 7-7 27q-2 8-13 5L25 64q-10-3-9-14zM85 39l48-7-1 18q-1 12-11 14l-25 4q-10 1-11-9z" fill="#a9b2ad" opacity=".65"/><path d="M24 33l35 5M92 41l31-5" stroke="#e4d8c5" stroke-width="3" opacity=".6"/></svg>`,
+watch:`<svg viewBox="0 0 110 165" aria-hidden="true"><path d="M39 5h32l7 47H32zM32 112h46l-7 48H39z" fill="#343a35"/><rect x="20" y="44" width="70" height="77" rx="18" fill="#444a40" stroke="#252a25" stroke-width="3"/><rect x="27" y="51" width="56" height="63" rx="13" fill="#b8a77f" stroke="#d1c3a2" stroke-width="3"/><rect x="33" y="58" width="44" height="49" rx="7" fill="#2e352f"/><text x="55" y="84" text-anchor="middle" font-size="13" fill="#d8d0b7" font-family="monospace">10:08</text><circle cx="55" cy="96" r="2" fill="#d8d0b7"/></svg>`,
+hairclip:`<svg viewBox="0 0 150 100" aria-hidden="true"><path d="M14 51Q15 12 72 9q59-3 65 42-10 38-62 39Q25 90 14 51z" fill="#315e5b" stroke="#234642" stroke-width="3"/><path d="M23 49q24-25 47-26t49 24M27 62q27-19 49-17t43 17" fill="none" stroke="#79a19a" stroke-width="3" opacity=".7"/><path d="M74 16l-5 67M49 22l8 57M99 22l-9 57" stroke="#203f3b" stroke-width="4"/><path d="M22 53q52 19 109-2" stroke="#c0a77e" stroke-width="2" fill="none"/><path d="M34 82l-4 10m16-8-3 11m19-9-1 10m20-10 2 10m18-13 4 9m12-15 6 8" stroke="#393a31" stroke-width="3" stroke-linecap="round"/></svg>`,
+candle:`<svg viewBox="0 0 100 150" aria-hidden="true"><ellipse cx="50" cy="138" rx="32" ry="5" fill="#8a755e" opacity=".16"/><path d="M48 17q-14-17 2-24 14 12-2 24" fill="#d7a85d"/><path d="M50 20v12" stroke="#66513d" stroke-width="2"/><rect x="19" y="31" width="62" height="103" rx="8" fill="#d7cbb6" stroke="#a99a83" stroke-width="2"/><rect x="26" y="63" width="48" height="42" fill="#eee7d9" stroke="#b8a88f"/><text x="50" y="78" font-size="7" text-anchor="middle" fill="#7d6b54" font-family="Georgia">SLOW</text><text x="50" y="88" font-size="7" text-anchor="middle" fill="#7d6b54" font-family="Georgia">EVENINGS</text></svg>`,
+mug:`<svg viewBox="0 0 130 135" aria-hidden="true"><ellipse cx="57" cy="119" rx="43" ry="6" fill="#8a755e" opacity=".16"/><path d="M91 44h15q17 0 13 25-4 23-29 18" fill="none" stroke="#9e8970" stroke-width="10"/><path d="M20 30q35 8 72 0v70q-1 16-36 16T20 100z" fill="#c5b49b" stroke="#9c876d" stroke-width="2"/><path d="M26 40q30 7 60 0" stroke="#e5d8c3" stroke-width="5" fill="none"/><path d="M38 65q18-12 35 0" stroke="#a18b70" stroke-width="2" fill="none" opacity=".7"/></svg>`,
+earrings:`<svg viewBox="0 0 110 110" aria-hidden="true"><g fill="none" stroke="#a78b55" stroke-width="4"><path d="M31 15q-13 9 0 21 13-12 0-21zM78 15q-13 9 0 21 13-12 0-21z"/><path d="M31 36v14m47-14v14"/></g><path d="M31 49q-20 18 0 43 20-25 0-43zM78 49q-20 18 0 43 20-25 0-43z" fill="#c4a46a" stroke="#8d7044" stroke-width="2"/><path d="M26 59q5 8 10 0M73 59q5 8 10 0" stroke="#f0dfb9" stroke-width="3" fill="none"/></svg>`,
+hoodie:`<svg viewBox="0 0 180 190" aria-hidden="true"><ellipse cx="90" cy="178" rx="58" ry="6" fill="#8a755e" opacity=".15"/><path d="M56 37q4-23 34-23t34 23l24 17 21 89q-22 14-42 8l-4-37H57l-4 37q-20 6-42-8l21-89z" fill="#9b8771" stroke="#6e5d4d" stroke-width="2.5"/><path d="M56 37q7 34 34 35t34-35q-12-15-34-15T56 37z" fill="#b5a18a" stroke="#6e5d4d" stroke-width="2"/><path d="M67 39q23 22 46 0" fill="none" stroke="#6e5d4d" stroke-width="2"/><path d="M76 70l-4 30m32-30 4 30" stroke="#6e5d4d" stroke-width="2" fill="none"/><path d="M57 116q33 8 66 0l-2 28q-31 10-62 0z" fill="#8b7763" opacity=".8"/><path d="M35 66l-15 67q11 7 22 5l17-59M145 66l15 67q-11 7-22 5l-17-59" fill="none" stroke="#6e5d4d" stroke-width="2"/><path d="M88 102v13m6-13v13" stroke="#e0d2bd" stroke-width="2"/></svg>`
+};
+
+const container = document.getElementById('items');
+const page = document.getElementById('page');
+const backdrop = document.getElementById('backdrop');
+const closeButton = document.getElementById('close');
+let lastFocused = null;
+
+function renderItems() {
+  container.innerHTML = '';
+  wishlist.forEach((item, i) => {
+    const button = document.createElement('button');
+    button.className = 'item';
+    button.type = 'button';
+    button.setAttribute('aria-label', `View ${item.name}`);
+    button.dataset.id = item.id;
+    if (item.image) { const img = document.createElement('img'); img.src = item.image; img.alt = item.name; img.loading = 'lazy'; img.onerror = () => { img.remove(); button.innerHTML = art[item.id] || ''; }; button.appendChild(img); } else { button.innerHTML = art[item.id] || ''; }
+    button.style.setProperty('--rotate', `${item.r}deg`);
+    button.style.width = `${item.w}px`;
+    button.style.height = `${item.h}px`;
+    button.style.setProperty('--mobile-w', `${Math.round(item.w * 0.72)}px`);
+    button.style.setProperty('--mobile-h', `${Math.round(item.h * 0.72)}px`);
+    button.addEventListener('click', () => openModal(item, button));
+    container.appendChild(button);
+  });
+  positionItems();
+}
+
+function positionItems() {
+  if (window.matchMedia('(max-width: 700px)').matches) return;
+  const w = page.clientWidth, h = Math.max(page.clientHeight, window.innerHeight);
+  const buttons = [...container.children];
+  const centerX = w / 2, centerY = h / 2;
+  const reservedW = Math.min(440, w * .43), reservedH = 230;
+  const placed = [];
+  const seeded = (n) => {
+    const x = Math.sin(n * 127.1 + 18.7) * 43758.5453;
+    return x - Math.floor(x);
+  };
+  buttons.forEach((button, i) => {
+    const item = wishlist[i];
+    const bw = item.w, bh = item.h;
+    let best = null, bestScore = -Infinity;
+    for (let k = 0; k < 160; k++) {
+      const x = 45 + seeded(i * 311 + k * 7 + 1) * (w - 90);
+      const y = 55 + seeded(i * 197 + k * 13 + 9) * (h - 110);
+      const insideTitle = Math.abs(x-centerX) < reservedW/2 + bw*.38 && Math.abs(y-centerY) < reservedH/2 + bh*.38;
+      if (insideTitle) continue;
+      let minDist = Infinity, collision = false;
+      for (const p of placed) {
+        const dx = x-p.x, dy = y-p.y;
+        const safeX = (bw+p.w)/2 + 20, safeY = (bh+p.h)/2 + 18;
+        if (Math.abs(dx) < safeX && Math.abs(dy) < safeY) collision = true;
+        minDist = Math.min(minDist, Math.hypot(dx, dy));
+      }
+      if (collision) continue;
+      const edge = Math.min(x, w-x, y, h-y);
+      const score = Math.min(minDist, 260) + Math.min(edge, 100)*.22;
+      if (score > bestScore) { bestScore = score; best = {x,y}; }
+    }
+    if (!best) {
+      const fallback = [{x:.12,y:.25},{x:.86,y:.22},{x:.12,y:.75},{x:.88,y:.75},{x:.5,y:.1},{x:.5,y:.9},{x:.25,y:.12},{x:.75,y:.88},{x:.08,y:.5},{x:.92,y:.5}][i%10];
+      best = {x:w*fallback.x,y:h*fallback.y};
+    }
+    button.style.left = `${best.x}px`;
+    button.style.top = `${best.y}px`;
+    placed.push({x:best.x,y:best.y,w:bw,h:bh});
+  });
+}
+
+function openModal(item, trigger) {
+  lastFocused = trigger;
+  document.getElementById('modal-title').textContent = item.name;
+  const modalArt = document.getElementById('modal-art');
+  modalArt.innerHTML = '';
+  if (item.image) { const img = document.createElement('img'); img.src = item.image; img.alt = item.name; img.onerror = () => { modalArt.innerHTML = art[item.id] || ''; }; modalArt.appendChild(img); }
+  else modalArt.innerHTML = art[item.id] || '';
+  document.getElementById('modal-price').textContent = item.price;
+  document.getElementById('modal-notes').textContent = item.notes;
+  const link = document.getElementById('modal-link');
+  link.href = item.link || '#';
+  link.style.display = item.link ? 'inline-block' : 'none';
+  backdrop.classList.add('open');
+  closeButton.focus();
+}
+function closeModal() {
+  backdrop.classList.remove('open');
+  if (lastFocused) lastFocused.focus();
+}
+closeButton.addEventListener('click', closeModal);
+backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+document.addEventListener('keydown', e => {
+  if (!backdrop.classList.contains('open')) return;
+  if (e.key === 'Escape') { closeModal(); return; }
+  if (e.key === 'Tab') {
+    const focusable = [...backdrop.querySelectorAll('button, a[href]')].filter(el => el.offsetParent !== null);
+    if (!focusable.length) return;
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+});
+let resizeTimer;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(positionItems, 120); });
+async function loadWishlist() {
+  const hint = document.getElementById('hint');
+  hint.textContent = 'loading wishlist…';
+  container.innerHTML = '';
+  try {
+    // no-store asks the browser not to reuse an old response after spreadsheet edits.
+    const response = await fetch(FEED_URL, { cache: 'no-store', redirect: 'follow' });
+    if (!response.ok) throw new Error(`Google Sheets returned HTTP ${response.status}`);
+    const csv = await response.text();
+    if (/^\s*</.test(csv)) throw new Error('Google returned a webpage instead of CSV. Confirm that this tab is published to the web as CSV.');
+    const rows = parseCSV(csv);
+    if (!rows.length) throw new Error('The published CSV is empty or contains only a header row.');
+    const required = ['name', 'price', 'image', 'link', 'notes', 'category', 'active'];
+    const missing = required.filter(key => !(key in rows[0]));
+    if (missing.length) throw new Error(`Missing spreadsheet columns: ${missing.join(', ')}. Check the header row spelling.`);
+    wishlist = rows.filter(row => row.name && (String(row.active || '').trim() === '' || truthy(row.active))).map(normalizeItem);
+    if (!wishlist.length) throw new Error('No active wishlist items were found. Set active to TRUE for items you want displayed.');
+    renderItems();
+    hint.textContent = 'click an object to take a closer look';
+  } catch (error) {
+    console.error('Could not load wishlist feed:', error);
+    hint.textContent = 'wishlist could not load — please check the published spreadsheet';
+    container.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#887c6e;font:italic 14px Georgia,serif">Your wishlist is having trouble loading. Please try again in a moment.</p>';
+  }
+}
+loadWishlist();
+</script>
+</body>
+</html>
