@@ -93,11 +93,16 @@ body {
 
 /* SCREEN BEZEL */
 
+/*
+  The screen now uses its own aspect ratio instead
+  of a percentage height. This keeps its proportions
+  consistent on wide desktop windows and phones.
+*/
+
 .bezel {
   width: 100%;
-
-  /* Larger screen, same overall iPod dimensions */
-  height: 46%;
+  height: auto;
+  aspect-ratio: 1.3 / 1;
 
   padding: 1.8%;
   border-radius: 4.5%;
@@ -512,8 +517,6 @@ body {
 
         <div class="screen-content" id="screen-content">
 
-          <!-- LEFT MENU -->
-
           <div class="menu-panel">
 
             <div class="screen-title" id="screen-title">
@@ -526,8 +529,6 @@ body {
             </div>
 
           </div>
-
-          <!-- RIGHT ALBUM ARTWORK -->
 
           <div class="album-panel">
 
@@ -551,8 +552,6 @@ body {
         MENU
       </button>
 
-      <!-- PREVIOUS -->
-
       <button
         class="skip-icon skip-prev"
         id="previous-button"
@@ -565,8 +564,6 @@ body {
         </svg>
       </button>
 
-      <!-- NEXT -->
-
       <button
         class="skip-icon skip-next"
         id="next-button"
@@ -578,8 +575,6 @@ body {
           <rect x="35" y="3" width="4" height="17" fill="currentColor"/>
         </svg>
       </button>
-
-      <!-- PLAY / PAUSE -->
 
       <button
         class="play-label"
@@ -595,8 +590,6 @@ body {
           <rect x="7.5" y="1" width="3.5" height="16" fill="currentColor"/>
         </svg>
       </button>
-
-      <!-- CENTER BUTTON -->
 
       <button
         class="wheel-center"
@@ -622,34 +615,13 @@ body {
    GOOGLE SHEETS CONNECTION
 ========================================= */
 
-// Published Google Sheets CSV URL
-
 const CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vTb04rRYskV66irmkGkGYi7jH9k0EevD9ZEmBt56kgCYvBtFoJ4XeyQeiAlsIL-IyspbEC5vK2vusI4/pub?gid=0&single=true&output=csv";
 
-
-/*
-   ALBUM COVER LOCATION
-
-   This assumes you have an "covers" folder
-   in the same folder as this HTML page.
-
-   Example:
-   dear-ipod/
-     index.html
-     covers/
-       001.png
-       002.png
-       003.png
-
-   If your covers are instead in the same folder
-   as this HTML file, change "covers/" to "./".
-*/
+// Album covers are stored in the "covers" folder
+// beside this HTML file.
 
 const COVER_BASE_PATH = "covers/";
-
-
-// Blog data
 
 let posts = [];
 let latestPost = null;
@@ -675,8 +647,6 @@ const playButton = document.getElementById("play-button");
 
 /* =========================================
    CSV PARSER
-   Supports commas, quotation marks,
-   and multiline blog posts.
 ========================================= */
 
 function parseCSV(text) {
@@ -771,13 +741,9 @@ function getCoverUrl(cover) {
 
   const value = cover.trim();
 
-  // Use a complete URL if one is entered in the sheet.
-
   if (/^https?:\/\//i.test(value)) {
     return value;
   }
-
-  // Otherwise, treat it as a filename in the cover folder.
 
   return new URL(
     COVER_BASE_PATH + value.replace(/^\/+/, ""),
@@ -789,10 +755,6 @@ function getCoverUrl(cover) {
 
 /* =========================================
    CONVERT SHEET ROWS INTO POSTS
-
-   Expected Google Sheets columns:
-
-   id | title | date | category | tags | content | cover
 ========================================= */
 
 function convertRows(rows) {
@@ -866,15 +828,9 @@ async function loadPosts() {
       );
     }
 
-    // The first post after sorting is the newest post.
-
     latestPost = posts[0];
 
-    // Show the newest post's cover on the homepage.
-
     updateArtwork(latestPost);
-
-    // Refresh homepage.
 
     history = [];
     showHome();
@@ -1016,9 +972,6 @@ function goBack() {
   currentView = history.pop();
   selectedIndex = 0;
 
-  // If returning to the homepage, restore
-  // the newest post's album cover.
-
   if (currentView.key === "home") {
     updateArtwork(latestPost);
   }
@@ -1054,8 +1007,6 @@ function showHome() {
   history = [];
   selectedIndex = 0;
 
-  // Always show the newest post's artwork on home.
-
   updateArtwork(latestPost);
 
   render();
@@ -1087,9 +1038,6 @@ function updateArtwork(post) {
 
 }
 
-
-// Hide the image if its file cannot be found.
-// The colored background behind it will remain visible.
 
 albumArt.addEventListener("error", () => {
 
@@ -1554,8 +1502,6 @@ function render() {
   });
 
 
-  // Keep selected item visible.
-
   const selected = menu.querySelector(".selected");
 
   if (selected) {
@@ -1571,6 +1517,9 @@ function render() {
 
 /* =========================================
    MOVE THROUGH MENU SELECTIONS
+
+   Selection now stops at the first and last
+   items instead of looping around.
 ========================================= */
 
 function moveSelection(direction) {
@@ -1609,14 +1558,24 @@ function moveSelection(direction) {
   }
 
 
-  // Menu navigation.
+  // Menu navigation: clamp at either end.
 
   const length = currentView.items.length;
 
   if (length === 0) return;
 
-  selectedIndex =
-    (selectedIndex + direction + length) % length;
+  const nextSelection = Math.max(
+    0,
+    Math.min(length - 1, selectedIndex + direction)
+  );
+
+  // Do nothing if already at the end in this direction.
+
+  if (nextSelection === selectedIndex) {
+    return;
+  }
+
+  selectedIndex = nextSelection;
 
   playClick();
 
@@ -1629,7 +1588,7 @@ function moveSelection(direction) {
    BUTTON EVENTS
 ========================================= */
 
-// Center button.
+// Center button
 
 selectButton.addEventListener("click", () => {
 
@@ -1644,12 +1603,12 @@ selectButton.addEventListener("click", () => {
 });
 
 
-// MENU button.
+// MENU button
 
 menuButton.addEventListener("click", goBack);
 
 
-// Previous button.
+// Previous button
 
 previousButton.addEventListener("click", () => {
 
@@ -1658,7 +1617,7 @@ previousButton.addEventListener("click", () => {
 });
 
 
-// Next button.
+// Next button
 
 nextButton.addEventListener("click", () => {
 
@@ -1667,7 +1626,7 @@ nextButton.addEventListener("click", () => {
 });
 
 
-// Play button.
+// Play button
 
 playButton.addEventListener("click", () => {
 
@@ -1766,6 +1725,7 @@ function stopWheel() {
 
   pointerActive = false;
   previousAngle = null;
+  angleAccumulator = 0;
 
 }
 
