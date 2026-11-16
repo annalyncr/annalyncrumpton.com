@@ -1,0 +1,1693 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dear iPod</title>
+
+<style>
+:root {
+  --walnut: #493021;
+  --blue: #3982bd;
+  --screen: #f8f8f6;
+  --icon-gray: #a9b0b6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+
+  background:
+    radial-gradient(ellipse at 50% 35%,
+      rgba(160,115,78,.2), transparent 70%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(30,15,8,.07) 0px,
+      transparent 3px,
+      transparent 12px,
+      rgba(200,150,105,.035) 14px,
+      transparent 19px
+    ),
+    linear-gradient(135deg, #62432e, #493021 50%, #382217);
+
+  background-attachment: fixed;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* MAIN SCENE */
+
+.scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 30px 15px;
+  width: 100%;
+}
+
+/* IPOD BODY */
+
+.ipod {
+  position: relative;
+  width: min(76vw, 370px);
+  aspect-ratio: 0.599;
+  padding: 6.5% 7.5% 8%;
+  border-radius: 9.5% / 6%;
+
+  background: linear-gradient(
+    110deg,
+    #aaa9a6 0%,
+    #e8e8e6 13%,
+    #c8c8c5 48%,
+    #ededeb 80%,
+    #aaa9a6 100%
+  );
+
+  box-shadow:
+    inset 0 2px 5px rgba(255,255,255,.9),
+    inset 0 -4px 8px rgba(0,0,0,.2),
+    0 38px 55px rgba(0,0,0,.48),
+    0 15px 22px rgba(0,0,0,.34),
+    0 5px 10px rgba(0,0,0,.22);
+
+  transform: rotate(-0.35deg);
+}
+
+.ipod::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  border: 1px solid rgba(255,255,255,.5);
+  pointer-events: none;
+}
+
+/* SCREEN BEZEL */
+
+.bezel {
+  width: 100%;
+  height: 39%;
+  padding: 1.8%;
+  border-radius: 4.5%;
+  background: linear-gradient(145deg, #111, #303132 50%, #111);
+
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,.7),
+    0 1px 1px rgba(255,255,255,.5);
+}
+
+.screen {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--screen);
+  color: #111;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* STATUS BAR */
+
+.status {
+  height: 13%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 3.5%;
+
+  background: linear-gradient(#f7f7f5, #d7d7d4);
+  border-bottom: 1px solid #aaa;
+
+  font-size: clamp(11px, 2.9vw, 14px);
+  font-weight: 700;
+}
+
+.status-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.play-icon {
+  color: #3984b9;
+  font-size: 13px;
+}
+
+.battery {
+  width: 25px;
+  height: 12px;
+  border: 1px solid #626762;
+  border-radius: 2px;
+  padding: 1px;
+  background: #d9ebce;
+  position: relative;
+}
+
+.battery::before {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 75%;
+  background: linear-gradient(#87c56c, #4d9b40);
+}
+
+.battery::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: 3px;
+  width: 2px;
+  height: 4px;
+  background: #626762;
+}
+
+/* SCREEN CONTENT */
+
+.screen-content {
+  height: 87%;
+  display: flex;
+  overflow: hidden;
+}
+
+/* LEFT MENU */
+
+.menu-panel {
+  width: 52%;
+  height: 100%;
+  background: white;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.screen-title {
+  height: 17%;
+  display: flex;
+  align-items: center;
+  padding: 0 7%;
+
+  font-size: clamp(12px, 3.1vw, 16px);
+  font-weight: 700;
+  letter-spacing: -.35px;
+
+  background: linear-gradient(#fafaf8, #e5e5e2);
+  border-bottom: 1px solid #aaa;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  height: 83%;
+  background: #fff;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.menu::-webkit-scrollbar {
+  display: none;
+}
+
+.menu li {
+  height: 16.666%;
+  min-height: 16.666%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 6%;
+
+  font-size: clamp(10px, 2.7vw, 14px);
+  font-weight: 700;
+  letter-spacing: -.25px;
+  color: #111;
+
+  border-bottom: 1px solid rgba(0,0,0,.06);
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.menu li > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.menu li.selected {
+  color: white;
+  background: linear-gradient(#5795ca, #286ca8);
+  text-shadow: 0 -1px rgba(0,0,0,.2);
+}
+
+.arrow {
+  font-size: 1.6em;
+  font-weight: 400;
+  line-height: 1;
+  margin-left: 3px;
+  flex-shrink: 0;
+}
+
+/* RIGHT ALBUM ARTWORK */
+
+.album-panel {
+  width: 48%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+
+  background:
+    radial-gradient(circle at 50% 35%, #e8c5d5, transparent 35%),
+    linear-gradient(145deg, #34305c, #a65d91 60%, #e5b3a0);
+}
+
+.album-art {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* CLICK WHEEL */
+
+.wheel {
+  position: absolute;
+  width: 62%;
+  aspect-ratio: 1;
+  left: 19%;
+  bottom: 10.5%;
+
+  border-radius: 50%;
+
+  background: linear-gradient(
+    145deg,
+    #fff,
+    #f8f8f8 60%,
+    #e9e9e8
+  );
+
+  border: 1px solid #aaa;
+
+  box-shadow:
+    inset 0 1px 2px white,
+    inset 0 -2px 4px rgba(0,0,0,.07),
+    0 1px 3px rgba(0,0,0,.12);
+
+  touch-action: none;
+}
+
+.wheel button {
+  position: absolute;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  color: var(--icon-gray);
+}
+
+.wheel button:focus {
+  outline: none;
+}
+
+.wheel button:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.wheel-center {
+  position: absolute;
+  width: 37%;
+  aspect-ratio: 1;
+  left: 31.5%;
+  top: 31.5%;
+  border-radius: 50% !important;
+
+  background: linear-gradient(
+    145deg,
+    #dededb,
+    #f1f1ef 70%,
+    #d3d3d0
+  ) !important;
+
+  border: 1px solid #aaa !important;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.08);
+  z-index: 2;
+}
+
+/* WHEEL LABELS */
+
+.wheel-label {
+  position: absolute;
+  color: var(--icon-gray);
+  user-select: none;
+  line-height: 1;
+}
+
+.menu-label {
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  font-size: clamp(11px, 3vw, 15px);
+  font-weight: 700;
+  letter-spacing: .4px;
+  background: transparent !important;
+  z-index: 3;
+}
+
+/* SKIP ICONS */
+
+.skip-icon {
+  position: absolute;
+  top: 50%;
+  width: 15%;
+  height: 10%;
+  transform: translateY(-50%);
+  color: var(--icon-gray);
+  z-index: 3;
+}
+
+.skip-prev {
+  left: 8%;
+}
+
+.skip-next {
+  right: 8%;
+}
+
+.skip-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+/* PLAY / PAUSE */
+
+.play-label {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  color: var(--icon-gray);
+  z-index: 3;
+}
+
+.play-label svg {
+  width: clamp(11px, 3vw, 15px);
+  height: clamp(12px, 3.3vw, 16px);
+  display: block;
+}
+
+/* ARTICLE READING VIEW */
+
+.article-view {
+  height: 83%;
+  overflow-y: auto;
+  padding: 5% 7%;
+  background: white;
+  color: #171717;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(9px, 2.3vw, 12px);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  scrollbar-width: thin;
+}
+
+.article-view[hidden],
+.menu[hidden] {
+  display: none;
+}
+
+.article-view h2 {
+  font-size: 1.3em;
+  line-height: 1.2;
+  margin: 0 0 8px;
+}
+
+.article-meta {
+  color: #777;
+  font-size: .85em;
+  margin-bottom: 12px;
+}
+
+.article-view p {
+  margin: 0 0 10px;
+}
+
+.screen-content.reading .menu-panel {
+  width: 100%;
+}
+
+.screen-content.reading .album-panel {
+  display: none;
+}
+
+/* CAPTION */
+
+.caption {
+  color: rgba(245,232,218,.75);
+  font-family: Georgia, serif;
+  font-size: 11px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* MOBILE */
+
+@media (max-width: 480px) {
+  .ipod {
+    width: min(84vw, 370px);
+  }
+
+  .menu li {
+    font-size: clamp(9px, 2.5vw, 12px);
+  }
+
+  .caption {
+    font-size: 9px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="scene">
+
+  <div class="ipod">
+
+    <div class="bezel">
+      <div class="screen">
+
+        <div class="status">
+          <span>iPod</span>
+
+          <span class="status-right">
+            <span class="play-icon">▶</span>
+            <span class="battery"></span>
+          </span>
+        </div>
+
+        <div class="screen-content" id="screen-content">
+
+          <!-- LEFT MENU -->
+
+          <div class="menu-panel">
+
+            <div class="screen-title" id="screen-title">
+              Dear iPod
+            </div>
+
+            <ul class="menu" id="menu"></ul>
+
+            <div class="article-view" id="article-view" hidden>
+            </div>
+
+          </div>
+
+          <!-- RIGHT ALBUM ARTWORK -->
+
+          <div class="album-panel">
+
+            <img
+              class="album-art"
+              id="album-art"
+              src="album-cover.png"
+              alt="Featured blog post artwork"
+            >
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- CLICK WHEEL -->
+
+    <div class="wheel" id="wheel">
+
+      <button class="wheel-label menu-label" id="menu-button">
+        MENU
+      </button>
+
+      <!-- PREVIOUS -->
+
+      <button
+        class="skip-icon skip-prev"
+        id="previous-button"
+        aria-label="Previous"
+      >
+        <svg viewBox="0 0 40 24">
+          <rect x="1" y="3" width="4" height="17" fill="currentColor"/>
+          <path d="M19 3 L19 21 L7 12 Z" fill="currentColor"/>
+          <path d="M34 3 L34 21 L22 12 Z" fill="currentColor"/>
+        </svg>
+      </button>
+
+      <!-- NEXT -->
+
+      <button
+        class="skip-icon skip-next"
+        id="next-button"
+        aria-label="Next"
+      >
+        <svg viewBox="0 0 40 24">
+          <path d="M6 3 L6 21 L18 12 Z" fill="currentColor"/>
+          <path d="M21 3 L21 21 L33 12 Z" fill="currentColor"/>
+          <rect x="35" y="3" width="4" height="17" fill="currentColor"/>
+        </svg>
+      </button>
+
+      <!-- PLAY / PAUSE -->
+
+      <button
+        class="play-label"
+        id="play-button"
+        aria-label="Now Playing"
+      >
+        <svg viewBox="0 0 16 18">
+          <path d="M2 1 L15 9 L2 17 Z" fill="currentColor"/>
+        </svg>
+
+        <svg viewBox="0 0 12 18">
+          <rect x="1" y="1" width="3.5" height="16" fill="currentColor"/>
+          <rect x="7.5" y="1" width="3.5" height="16" fill="currentColor"/>
+        </svg>
+      </button>
+
+      <!-- CENTER BUTTON -->
+
+      <button
+        class="wheel-center"
+        id="select-button"
+        aria-label="Select"
+      ></button>
+
+    </div>
+
+  </div>
+
+  <p class="caption">
+    A little place for everything I want to remember
+  </p>
+
+</main>
+
+
+<script>
+
+/* =========================================
+   DEAR IPOD
+   GOOGLE SHEETS CONNECTION
+========================================= */
+
+// Published Google Sheets CSV URL
+
+const CSV_URL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vTb04rRYskV66irmkGkGYi7jH9k0EevD9ZEmBt56kgCYvBtFoJ4XeyQeiAlsIL-IyspbEC5vK2vusI4/pub?gid=0&single=true&output=csv";
+
+// Blog data
+
+let posts = [];
+let latestPost = null;
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const wheel = document.getElementById("wheel");
+const menu = document.getElementById("menu");
+const screenTitle = document.getElementById("screen-title");
+const articleView = document.getElementById("article-view");
+const albumArt = document.getElementById("album-art");
+const screenContent = document.getElementById("screen-content");
+
+const menuButton = document.getElementById("menu-button");
+const selectButton = document.getElementById("select-button");
+const previousButton = document.getElementById("previous-button");
+const nextButton = document.getElementById("next-button");
+const playButton = document.getElementById("play-button");
+
+
+/* =========================================
+   CSV PARSER
+   Supports commas, quotation marks,
+   and multiline blog posts.
+========================================= */
+
+function parseCSV(text) {
+
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let insideQuotes = false;
+
+  text = text.replace(/^\uFEFF/, "");
+
+  for (let i = 0; i < text.length; i++) {
+
+    const char = text[i];
+    const next = text[i + 1];
+
+    if (char === '"' && insideQuotes && next === '"') {
+
+      cell += '"';
+      i++;
+
+    } else if (char === '"') {
+
+      insideQuotes = !insideQuotes;
+
+    } else if (char === "," && !insideQuotes) {
+
+      row.push(cell);
+      cell = "";
+
+    } else if (
+      (char === "\n" || char === "\r") &&
+      !insideQuotes
+    ) {
+
+      if (char === "\r" && next === "\n") {
+        i++;
+      }
+
+      row.push(cell);
+
+      if (row.some(value => value.trim() !== "")) {
+        rows.push(row);
+      }
+
+      row = [];
+      cell = "";
+
+    } else {
+
+      cell += char;
+
+    }
+  }
+
+  row.push(cell);
+
+  if (row.some(value => value.trim() !== "")) {
+    rows.push(row);
+  }
+
+  if (!rows.length) return [];
+
+  const headers = rows[0].map(header =>
+    header.trim().toLowerCase().replace(/^\uFEFF/, "")
+  );
+
+  return rows.slice(1).map(values => {
+
+    const entry = {};
+
+    headers.forEach((header, index) => {
+      entry[header] = (values[index] || "").trim();
+    });
+
+    return entry;
+
+  });
+
+}
+
+
+/* =========================================
+   CONVERT SHEET ROWS INTO POSTS
+========================================= */
+
+function convertRows(rows) {
+
+  return rows
+
+    .filter(row =>
+      row.title &&
+      row.date &&
+      row.content
+    )
+
+    .map((row, index) => {
+
+      return {
+
+        id: row.id || String(index + 1),
+
+        title: row.title,
+
+        date: row.date,
+
+        category: row.category || "Uncategorized",
+
+        tags: (row.tags || "")
+          .split(/[,;|]/)
+          .map(tag => tag.trim())
+          .filter(Boolean),
+
+        content: row.content
+          .split(/\n\s*\n/)
+          .map(paragraph => paragraph.trim())
+          .filter(Boolean),
+
+        cover: row.cover || "album-cover.png"
+
+      };
+
+    })
+
+    .sort((a, b) =>
+      b.date.localeCompare(a.date)
+    );
+
+}
+
+
+/* =========================================
+   LOAD GOOGLE SHEETS DATA
+========================================= */
+
+async function loadPosts() {
+
+  try {
+
+    const response = await fetch(CSV_URL);
+
+    if (!response.ok) {
+      throw new Error("Could not retrieve Google Sheets data.");
+    }
+
+    const csvText = await response.text();
+
+    const rows = parseCSV(csvText);
+
+    posts = convertRows(rows);
+
+    if (posts.length === 0) {
+      throw new Error("No valid blog posts found. Check your column headers and data.");
+    }
+
+    // Most recent post
+
+    latestPost = posts[0];
+
+    // Update artwork
+
+    updateArtwork(latestPost);
+
+    // Refresh homepage
+
+    history = [];
+    showHome();
+
+    console.log(
+      "Dear iPod loaded:",
+      posts.length,
+      "posts"
+    );
+
+  } catch (error) {
+
+    console.error("Dear iPod loading error:", error);
+
+    currentView = {
+      type: "menu",
+      key: "error",
+      title: "Library Error",
+      items: [
+        {
+          label: "Could not load posts",
+          key: "none"
+        },
+        {
+          label: "Check spreadsheet",
+          key: "none"
+        }
+      ]
+    };
+
+    history = [];
+    selectedIndex = 0;
+    render();
+
+  }
+
+}
+
+
+/* =========================================
+   CLICK SOUND
+========================================= */
+
+let audioContext = null;
+let soundMuted = false;
+
+function playClick() {
+
+  if (soundMuted) return;
+
+  try {
+
+    const AudioContext =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContext) return;
+
+    if (!audioContext) {
+      audioContext = new AudioContext();
+    }
+
+    if (audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.type = "sine";
+
+    oscillator.frequency.setValueAtTime(
+      900,
+      audioContext.currentTime
+    );
+
+    oscillator.frequency.exponentialRampToValueAtTime(
+      500,
+      audioContext.currentTime + 0.025
+    );
+
+    gain.gain.setValueAtTime(
+      0.035,
+      audioContext.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      audioContext.currentTime + 0.035
+    );
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + 0.04);
+
+  } catch (error) {
+
+    console.warn("Audio unavailable:", error);
+
+  }
+
+}
+
+
+/* =========================================
+   NAVIGATION STATE
+========================================= */
+
+let currentView = null;
+let history = [];
+let selectedIndex = 0;
+let currentPost = null;
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+function navigate(view) {
+
+  if (currentView) {
+    history.push(currentView);
+  }
+
+  currentView = view;
+  selectedIndex = 0;
+
+  playClick();
+  render();
+
+}
+
+
+function goBack() {
+
+  if (history.length === 0) return;
+
+  currentView = history.pop();
+  selectedIndex = 0;
+
+  playClick();
+  render();
+
+}
+
+
+function showHome() {
+
+  currentView = {
+
+    type: "menu",
+    key: "home",
+    title: "iPod",
+
+    items: [
+
+      { label: "Now Playing", key: "now-playing" },
+      { label: "All Posts", key: "all-posts" },
+      { label: "Categories", key: "categories" },
+      { label: "Tags", key: "tags" },
+      { label: "Archive", key: "archive" },
+      { label: "Recently Added", key: "recent" },
+      { label: "Settings", key: "settings" }
+
+    ]
+
+  };
+
+  history = [];
+  selectedIndex = 0;
+
+  render();
+
+}
+
+
+/* =========================================
+   ALBUM ARTWORK
+========================================= */
+
+function updateArtwork(post) {
+
+  if (!post || !post.cover) return;
+
+  albumArt.src = post.cover;
+  albumArt.style.display = "block";
+
+  currentPost = post;
+
+}
+
+
+/* =========================================
+   OPEN A BLOG POST
+========================================= */
+
+function openPost(post) {
+
+  if (!post) return;
+
+  navigate({
+
+    type: "article",
+    key: "article",
+    title: post.title,
+    post: post
+
+  });
+
+  updateArtwork(post);
+
+}
+
+
+/* =========================================
+   SELECT MENU ITEM
+========================================= */
+
+function selectItem(item) {
+
+  switch (item.key) {
+
+    case "now-playing":
+
+      if (latestPost) {
+        openPost(latestPost);
+      }
+
+      break;
+
+
+    case "all-posts":
+
+      showPosts(posts, "All Posts");
+      break;
+
+
+    case "recent":
+
+      showPosts(posts.slice(0, 5), "Recently Added");
+      break;
+
+
+    case "categories":
+
+      showCategories();
+      break;
+
+
+    case "tags":
+
+      showTags();
+      break;
+
+
+    case "archive":
+
+      showArchive();
+      break;
+
+
+    case "settings":
+
+      showSettings();
+      break;
+
+
+    case "category":
+
+      showPosts(
+        posts.filter(p => p.category === item.value),
+        item.value
+      );
+
+      break;
+
+
+    case "tag":
+
+      showPosts(
+        posts.filter(p => p.tags.includes(item.value)),
+        item.value
+      );
+
+      break;
+
+
+    case "year":
+
+      showMonths(item.value);
+      break;
+
+
+    case "month":
+
+      showPosts(
+        posts.filter(p => p.date.startsWith(item.value)),
+        item.label
+      );
+
+      break;
+
+
+    case "post":
+
+      openPost(item.post);
+      break;
+
+
+    case "toggle-sound":
+
+      soundMuted = !soundMuted;
+
+      playClick();
+      render();
+
+      break;
+
+  }
+
+}
+
+
+/* =========================================
+   ALL POSTS
+========================================= */
+
+function showPosts(postList, title) {
+
+  navigate({
+
+    type: "menu",
+    key: "posts",
+    title: title,
+
+    items: postList.map(post => ({
+
+      label: post.title,
+      key: "post",
+      post: post
+
+    }))
+
+  });
+
+}
+
+
+/* =========================================
+   CATEGORIES
+========================================= */
+
+function showCategories() {
+
+  const categories = [
+
+    ...new Set(posts.map(p => p.category))
+
+  ].sort();
+
+  navigate({
+
+    type: "menu",
+    key: "categories",
+    title: "Categories",
+
+    items: categories.map(category => ({
+
+      label: category,
+      key: "category",
+      value: category
+
+    }))
+
+  });
+
+}
+
+
+/* =========================================
+   TAGS
+========================================= */
+
+function showTags() {
+
+  const tags = [
+
+    ...new Set(posts.flatMap(p => p.tags))
+
+  ].sort();
+
+  navigate({
+
+    type: "menu",
+    key: "tags",
+    title: "Tags",
+
+    items: tags.map(tag => ({
+
+      label: tag,
+      key: "tag",
+      value: tag
+
+    }))
+
+  });
+
+}
+
+
+/* =========================================
+   ARCHIVE
+========================================= */
+
+function showArchive() {
+
+  const years = [
+
+    ...new Set(posts.map(p => p.date.slice(0, 4)))
+
+  ].sort().reverse();
+
+  navigate({
+
+    type: "menu",
+    key: "archive",
+    title: "Archive",
+
+    items: years.map(year => ({
+
+      label: year,
+      key: "year",
+      value: year
+
+    }))
+
+  });
+
+}
+
+
+function showMonths(year) {
+
+  const months = [
+
+    ...new Set(
+
+      posts
+        .filter(p => p.date.startsWith(year))
+        .map(p => p.date.slice(0, 7))
+
+    )
+
+  ].sort().reverse();
+
+  navigate({
+
+    type: "menu",
+    key: "months",
+    title: year,
+
+    items: months.map(month => {
+
+      const date = new Date(month + "-02T12:00:00");
+
+      return {
+
+        label: date.toLocaleDateString("en-US", {
+          month: "long"
+        }),
+
+        key: "month",
+        value: month
+
+      };
+
+    })
+
+  });
+
+}
+
+
+/* =========================================
+   SETTINGS
+========================================= */
+
+function showSettings() {
+
+  navigate({
+
+    type: "menu",
+    key: "settings",
+    title: "Settings",
+
+    items: [
+
+      {
+        label: "Click Sounds: " + (soundMuted ? "Off" : "On"),
+        key: "toggle-sound"
+      }
+
+    ]
+
+  });
+
+}
+
+
+/* =========================================
+   SAFE HTML TEXT
+========================================= */
+
+function escapeHTML(value) {
+
+  return String(value).replace(/[&<>"']/g, char => ({
+
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+
+  })[char]);
+
+}
+
+
+/* =========================================
+   RENDER IPOD SCREEN
+========================================= */
+
+function render() {
+
+  if (!currentView) return;
+
+  screenTitle.textContent = currentView.title;
+
+
+  // ARTICLE VIEW
+
+  if (currentView.type === "article") {
+
+    menu.hidden = true;
+    articleView.hidden = false;
+
+    screenContent.classList.add("reading");
+
+    const post = currentView.post;
+
+    const formattedDate = new Date(
+      post.date + "T12:00:00"
+    ).toLocaleDateString("en-US", {
+
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+
+    });
+
+    articleView.innerHTML = `
+
+      <h2>${escapeHTML(post.title)}</h2>
+
+      <div class="article-meta">
+
+        ${formattedDate} · ${escapeHTML(post.category)}
+
+      </div>
+
+      ${post.content.map(paragraph =>
+
+        `<p>${escapeHTML(paragraph)}</p>`
+
+      ).join("")}
+
+    `;
+
+    articleView.scrollTop = 0;
+
+    return;
+
+  }
+
+
+  // MENU VIEW
+
+  articleView.hidden = true;
+  menu.hidden = false;
+
+  screenContent.classList.remove("reading");
+
+  menu.innerHTML = "";
+
+
+  currentView.items.forEach((item, index) => {
+
+    const li = document.createElement("li");
+
+    const label = document.createElement("span");
+
+    label.textContent = item.label;
+
+    li.appendChild(label);
+
+
+    if (item.key !== "toggle-sound" && item.key !== "none") {
+
+      const arrow = document.createElement("span");
+
+      arrow.className = "arrow";
+      arrow.textContent = "›";
+
+      li.appendChild(arrow);
+
+    }
+
+
+    if (index === selectedIndex) {
+
+      li.classList.add("selected");
+
+    }
+
+
+    li.addEventListener("click", () => {
+
+      if (item.key === "none") return;
+
+      selectedIndex = index;
+
+      render();
+
+      selectItem(item);
+
+    });
+
+
+    menu.appendChild(li);
+
+  });
+
+
+  // Keep selected item visible
+
+  const selected = menu.querySelector(".selected");
+
+  if (selected) {
+
+    selected.scrollIntoView({
+      block: "nearest"
+    });
+
+  }
+
+}
+
+
+/* =========================================
+   MOVE THROUGH MENU SELECTIONS
+========================================= */
+
+function moveSelection(direction) {
+
+  // While reading, previous/next moves
+  // between blog posts.
+
+  if (currentView.type === "article") {
+
+    const index = posts.findIndex(
+      p => p.id === currentView.post.id
+    );
+
+    const nextIndex = Math.max(
+      0,
+      Math.min(posts.length - 1, index + direction)
+    );
+
+    if (nextIndex !== index) {
+
+      const post = posts[nextIndex];
+
+      currentView.post = post;
+      currentView.title = post.title;
+
+      updateArtwork(post);
+
+      render();
+
+      playClick();
+
+    }
+
+    return;
+
+  }
+
+
+  // Menu navigation
+
+  const length = currentView.items.length;
+
+  if (length === 0) return;
+
+  selectedIndex =
+    (selectedIndex + direction + length) % length;
+
+  playClick();
+
+  render();
+
+}
+
+
+/* =========================================
+   BUTTON EVENTS
+========================================= */
+
+// Center button
+
+selectButton.addEventListener("click", () => {
+
+  if (currentView.type === "article") return;
+
+  const item = currentView.items[selectedIndex];
+
+  if (item) {
+    selectItem(item);
+  }
+
+});
+
+
+// MENU button
+
+menuButton.addEventListener("click", goBack);
+
+
+// Previous button
+
+previousButton.addEventListener("click", () => {
+
+  moveSelection(-1);
+
+});
+
+
+// Next button
+
+nextButton.addEventListener("click", () => {
+
+  moveSelection(1);
+
+});
+
+
+// Play button
+
+playButton.addEventListener("click", () => {
+
+  if (currentView.type === "article") {
+
+    goBack();
+
+  } else if (latestPost) {
+
+    openPost(latestPost);
+
+  }
+
+});
+
+
+/* =========================================
+   ROTATING CLICK WHEEL
+========================================= */
+
+let pointerActive = false;
+let previousAngle = null;
+let angleAccumulator = 0;
+
+
+function getAngle(event) {
+
+  const rect = wheel.getBoundingClientRect();
+
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+
+  return Math.atan2(
+
+    event.clientY - centerY,
+    event.clientX - centerX
+
+  ) * 180 / Math.PI;
+
+}
+
+
+wheel.addEventListener("pointerdown", event => {
+
+  if (event.target.closest("button")) return;
+
+  pointerActive = true;
+
+  previousAngle = getAngle(event);
+
+  angleAccumulator = 0;
+
+  wheel.setPointerCapture(event.pointerId);
+
+});
+
+
+wheel.addEventListener("pointermove", event => {
+
+  if (!pointerActive) return;
+
+  const angle = getAngle(event);
+
+  let difference = angle - previousAngle;
+
+  if (difference > 180) difference -= 360;
+  if (difference < -180) difference += 360;
+
+  angleAccumulator += difference;
+
+  previousAngle = angle;
+
+
+  // Adjust 20 to change wheel sensitivity.
+
+  while (angleAccumulator >= 20) {
+
+    moveSelection(1);
+
+    angleAccumulator -= 20;
+
+  }
+
+  while (angleAccumulator <= -20) {
+
+    moveSelection(-1);
+
+    angleAccumulator += 20;
+
+  }
+
+});
+
+
+function stopWheel() {
+
+  pointerActive = false;
+  previousAngle = null;
+
+}
+
+wheel.addEventListener("pointerup", stopWheel);
+wheel.addEventListener("pointercancel", stopWheel);
+
+
+/* =========================================
+   START DEAR IPOD
+========================================= */
+
+showHome();
+loadPosts();
+
+</script>
+
+</body>
+</html>
