@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -497,26 +498,12 @@ body {
 
 /* DESKTOP SCREEN DIMENSIONS */
 
-/*
-  Based on the real 7th-generation iPod Classic:
-
-  Body: approximately 2.4 x 4.1 inches
-  Screen: 2.5-inch diagonal, 320 x 240 pixels
-
-  The inner illuminated screen is approximately
-  83% of the body width and 37% of its height.
-
-  The bezel padding is accounted for below.
-*/
-
 @media (min-width: 481px) {
 
   .bezel {
     position: absolute;
-
     width: 86.5%;
     height: 38%;
-
     left: 6.75%;
     top: 6.5%;
   }
@@ -645,9 +632,6 @@ body {
 
 const CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vTb04rRYskV66irmkGkGYi7jH9k0EevD9ZEmBt56kgCYvBtFoJ4XeyQeiAlsIL-IyspbEC5vK2vusI4/pub?gid=0&single=true&output=csv";
-
-// Album covers are stored in the "covers" folder
-// beside this HTML file.
 
 const COVER_BASE_PATH = "covers/";
 
@@ -1062,7 +1046,10 @@ function updateArtwork(post) {
 
   albumArt.alt = `Cover for ${post.title}`;
   albumArt.style.display = "block";
-  albumArt.src = post.cover;
+
+  if (albumArt.src !== post.cover) {
+    albumArt.src = post.cover;
+  }
 
 }
 
@@ -1416,6 +1403,28 @@ function escapeHTML(value) {
 
 
 /* =========================================
+   UPDATE ARTWORK FROM MENU SELECTION
+
+   If the selected menu item represents
+   a blog post, show that post's cover.
+========================================= */
+
+function updateArtworkFromSelection() {
+
+  if (!currentView || currentView.type !== "menu") {
+    return;
+  }
+
+  const item = currentView.items[selectedIndex];
+
+  if (item && item.post) {
+    updateArtwork(item.post);
+  }
+
+}
+
+
+/* =========================================
    RENDER IPOD SCREEN
 ========================================= */
 
@@ -1482,6 +1491,11 @@ function render() {
   menu.innerHTML = "";
 
 
+  // Update artwork for the currently selected post.
+
+  updateArtworkFromSelection();
+
+
   currentView.items.forEach((item, index) => {
 
     const li = document.createElement("li");
@@ -1511,6 +1525,30 @@ function render() {
 
     }
 
+
+    // MOUSE HOVER:
+    // Change the selected entry and artwork immediately.
+
+    li.addEventListener("mouseenter", () => {
+
+      selectedIndex = index;
+
+      menu.querySelectorAll("li").forEach((entry, entryIndex) => {
+
+        entry.classList.toggle(
+          "selected",
+          entryIndex === selectedIndex
+        );
+
+      });
+
+      updateArtworkFromSelection();
+
+    });
+
+
+    // CLICK:
+    // Select and open the entry.
 
     li.addEventListener("click", () => {
 
@@ -1602,6 +1640,9 @@ function moveSelection(direction) {
   }
 
   selectedIndex = nextSelection;
+
+  // Update artwork as soon as the selection moves.
+  updateArtworkFromSelection();
 
   playClick();
 
