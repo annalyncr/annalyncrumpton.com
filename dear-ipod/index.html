@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,16 +93,17 @@ body {
 /* SCREEN BEZEL */
 
 /*
-  The screen now uses its own aspect ratio instead
-  of a percentage height. This keeps its proportions
-  consistent on wide desktop windows and phones.
+  The screen is now taller within the iPod body.
+  Its height is tied to the iPod itself, rather than
+  being calculated from the screen's width.
+
+  This keeps the screen proportions consistent on
+  desktop and mobile displays.
 */
 
 .bezel {
   width: 100%;
-  height: auto;
-  aspect-ratio: 1.3 / 1;
-
+  height: 42%;
   padding: 1.8%;
   border-radius: 4.5%;
   background: linear-gradient(145deg, #111, #303132 50%, #111);
@@ -116,6 +116,8 @@ body {
 .screen {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   background: var(--screen);
   color: #111;
@@ -125,7 +127,8 @@ body {
 /* STATUS BAR */
 
 .status {
-  height: 13%;
+  flex: 0 0 13%;
+  min-height: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -180,7 +183,8 @@ body {
 /* SCREEN CONTENT */
 
 .screen-content {
-  height: 87%;
+  flex: 1;
+  min-height: 0;
   display: flex;
   overflow: hidden;
 }
@@ -193,10 +197,13 @@ body {
   background: white;
   overflow: hidden;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .screen-title {
-  height: 17%;
+  flex: 0 0 17%;
+  min-height: 0;
   display: flex;
   align-items: center;
   padding: 0 7%;
@@ -216,7 +223,8 @@ body {
   list-style: none;
   padding: 0;
   margin: 0;
-  height: 83%;
+  flex: 1;
+  min-height: 0;
   background: #fff;
   overflow-y: auto;
   scrollbar-width: none;
@@ -427,7 +435,8 @@ body {
 /* ARTICLE READING VIEW */
 
 .article-view {
-  height: 83%;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 5% 7%;
   background: white;
@@ -602,7 +611,7 @@ body {
   </div>
 
   <p class="caption">
-    A little place for everything I want to remember
+    dear ipod: a home for updates, thoughts, & stories
   </p>
 
 </main>
@@ -1518,7 +1527,7 @@ function render() {
 /* =========================================
    MOVE THROUGH MENU SELECTIONS
 
-   Selection now stops at the first and last
+   Selection stops at the first and last
    items instead of looping around.
 ========================================= */
 
@@ -1568,8 +1577,6 @@ function moveSelection(direction) {
     0,
     Math.min(length - 1, selectedIndex + direction)
   );
-
-  // Do nothing if already at the end in this direction.
 
   if (nextSelection === selectedIndex) {
     return;
