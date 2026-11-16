@@ -221,7 +221,12 @@ function normalizeItem(row, index) {
   let image = (row.image || '').trim();
   // Root-relative paths such as /assets/wishlist/photo.png work on the custom domain.
   // Plain filenames are resolved inside the wishlist image folder.
-  if (image && !/^(https?:|data:|\/)/i.test(image)) image = `assets/wishlist/${image.replace(/^\.\//, '')}`;
+  if (image && !/^(https?:|data:|\.\.\/)/i.test(image)) {
+    image = image.replace(/^\/?assets\/wishlist\//, '../assets/wishlist/');
+    if (!image.startsWith('../')) {
+      image = `../assets/wishlist/${image.replace(/^\.\//, '')}`;
+    }
+  }
   return { id, name, price: row.price || '', notes: row.notes || '', link: row.link || '', image, category, w, h, r: ((index * 7) % 13) - 6 };
 }
 
