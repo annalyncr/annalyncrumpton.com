@@ -269,9 +269,9 @@
 
     startSoundEngine() {
       const soundFiles = {
-        ocean: "sounds/ocean_waves.mp3",
-        dreamscape: "sounds/underwater_dreamscape.mp3",
-        guitar: "sounds/calm_guitar.mp3"
+        ocean: "kelp-forest/sounds/ocean_waves.mp3",
+        dreamscape: "kelp-forest/sounds/underwater_dreamscape.mp3",
+        guitar: "kelp-forest/sounds/calm_guitar.mp3"
       };
 
       const mode = this.soundMode?.value || "ocean";
