@@ -1,0 +1,688 @@
+/* =====================================================================
+   jewelbox: styles
+   ---------------------------------------------------------------------
+   1. Design settings (colors, fonts, sizes): change things here first!
+   2. Page + desk surface
+   3. Header, back link, navigation
+   4. Craft materials: papers, washi tape, label maker, highlighter, ransom letters
+   5. Jewel case
+   6. CD-R disc
+   7. Studio layout + tool tray
+   8. Library + Stash
+   9. Helpers
+   ===================================================================== */
+
+
+/* ---------- 1. DESIGN SETTINGS ---------- */
+:root {
+  /* Desk (warm oak) */
+  --desk-light: #c0915f;
+  --desk-mid:   #9d6d43;
+  --desk-dark:  #6c4529;
+  --lamp-glow:  rgba(255, 224, 165, 0.38);
+
+  /* Ink + paper */
+  --ink:          #2b2420;
+  --sharpie:      #1b1a19;
+  --paper-cream:  #fbf6ea;
+  --paper-white:  #fffdf7;
+
+  /* Pattern colors, written as "R, G, B" so we can add transparency */
+  --gingham-blue: 84, 130, 196;
+  --gingham-red:  206, 70, 70;
+  --graph-line:   90, 140, 185;
+  --notebook-line: 80, 130, 190;
+  --margin-red:   222, 90, 90;
+
+  /* Washi tape */
+  --tape-pink:   rgba(241, 168, 186, 0.82);
+  --tape-mint:   rgba(158, 214, 190, 0.82);
+  --tape-yellow: rgba(246, 214, 118, 0.85);
+  --tape-red:    rgba(214, 78, 72, 0.8);
+
+  /* Label maker + highlighter */
+  --label-bg:    #1f1f22;
+  --label-text:  #f4f4ee;
+  --highlighter: rgba(255, 233, 80, 0.85);
+
+  /* Fonts */
+  --font-hand:   "Caveat", "Bradley Hand", cursive;
+  --font-marker: "Permanent Marker", "Marker Felt", cursive;
+  --font-type:   "Special Elite", "Courier New", monospace;
+  --font-label:  "Courier Prime", "Courier New", monospace;
+
+  /* Sizes */
+  --case-size:  min(540px, 90vw);   /* width of the big jewel case */
+  --disc-size:  min(440px, 84vw);   /* width of the CD on the Disc tab */
+  --tray-width: 270px;
+  --gutter:     clamp(16px, 4vw, 40px);
+
+  /* Shadows */
+  --shadow-soft: 0 1px 2px rgba(45, 25, 10, 0.25), 0 6px 14px -4px rgba(45, 25, 10, 0.35);
+  --shadow-case: 0 2px 3px rgba(40, 22, 8, 0.3), 0 22px 44px -12px rgba(40, 22, 8, 0.6);
+}
+
+
+/* ---------- 2. PAGE + DESK ---------- */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 0 var(--gutter) 48px;
+  color: var(--ink);
+  font-family: var(--font-type);
+  background-color: var(--desk-mid);
+  background-image:
+    radial-gradient(ellipse 70% 45% at 28% 0%, var(--lamp-glow), transparent 70%),        /* desk lamp */
+    repeating-linear-gradient(91deg, rgba(60, 34, 14, 0.07) 0 2px, transparent 2px 9px,     /* wood grain */
+                              rgba(255, 228, 185, 0.05) 9px 11px, transparent 11px 23px),
+    repeating-linear-gradient(89deg, rgba(60, 34, 14, 0.06) 0 1px, transparent 1px 61px),  /* plank seams */
+    linear-gradient(172deg, var(--desk-light), var(--desk-mid) 55%, var(--desk-dark));
+  background-attachment: fixed;
+}
+
+button { font: inherit; color: inherit; cursor: pointer; }
+
+:focus-visible {
+  outline: 2px dashed var(--sharpie);
+  outline-offset: 3px;
+}
+
+
+/* ---------- 3. HEADER + NAV ---------- */
+.topbar {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding-top: 18px;
+  margin-bottom: 26px;
+}
+
+.back-link {
+  justify-self: start;
+  font-size: 0.72rem;
+  text-decoration: none;
+  transform: rotate(-2deg);
+  transition: transform 0.2s ease;
+}
+.back-link:hover { transform: rotate(0deg) translateY(-2px); }
+
+.logo {
+  margin: 6px 0 0;
+  font-size: clamp(2.6rem, 9vw, 4.4rem);
+  font-weight: normal;
+  line-height: 1.1;
+}
+
+.tagline {
+  margin: 0;
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+  color: #3d2a1c;
+}
+
+.main-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 18px;
+  margin-top: 14px;
+}
+
+/* Each nav link is a little paper tag */
+.nav-tab {
+  position: relative;
+  padding: 8px 16px 6px;
+  background: var(--paper-white);
+  color: var(--ink);
+  text-decoration: none;
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-soft);
+  transform: rotate(var(--tilt, -1.5deg));
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.nav-tab:nth-child(2) { --tilt: 1.2deg; }
+.nav-tab:nth-child(3) { --tilt: -0.6deg; }
+.nav-tab:hover { transform: rotate(0deg) translateY(-3px); }
+
+/* The current view gets a strip of tape */
+.nav-tab[aria-current="page"] { background: #fff7d1; }
+.nav-tab[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 54px;
+  height: 18px;
+  translate: -50% 0;
+  rotate: -4deg;
+  background: var(--tape-pink);
+  clip-path: polygon(3% 0, 97% 0, 100% 25%, 96% 50%, 100% 75%, 97% 100%, 3% 100%, 0 75%, 4% 50%, 0 25%);
+}
+
+
+/* ---------- 4. CRAFT MATERIALS ---------- */
+
+/* --- Papers: add class "paper" plus one "paper--..." --- */
+.paper { background-color: var(--paper-cream); }
+
+.paper--gingham-blue {
+  background-color: #fbf8f1;
+  background-image:
+    linear-gradient(90deg, rgba(var(--gingham-blue), 0.42) 50%, transparent 50%),
+    linear-gradient(rgba(var(--gingham-blue), 0.42) 50%, transparent 50%);
+  background-size: 22px 22px;
+}
+
+.paper--gingham-red {
+  background-color: #fdf7f1;
+  background-image:
+    linear-gradient(90deg, rgba(var(--gingham-red), 0.4) 50%, transparent 50%),
+    linear-gradient(rgba(var(--gingham-red), 0.4) 50%, transparent 50%);
+  background-size: 22px 22px;
+}
+
+.paper--graph {
+  background-color: #fbfaf3;
+  background-image:
+    linear-gradient(rgba(var(--graph-line), 0.28) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--graph-line), 0.28) 1px, transparent 1px);
+  background-size: 14px 14px;
+}
+
+.paper--lined {
+  background-color: #fdfbf3;
+  background-image:
+    linear-gradient(90deg, transparent 34px, rgba(var(--margin-red), 0.6) 34px 36px, transparent 36px),
+    repeating-linear-gradient(transparent 0 25px, rgba(var(--notebook-line), 0.4) 25px 26px);
+  background-position: 0 0, 0 18px;
+}
+
+/* Aged paper + five-line music staffs + a few notes */
+.paper--sheet-music {
+  background-color: #eee1c2;
+  background-image:
+    radial-gradient(ellipse at 25% 15%, rgba(255, 255, 255, 0.35), transparent 60%),
+    radial-gradient(ellipse at 85% 95%, rgba(140, 95, 45, 0.25), transparent 55%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='70'%3E%3Cg fill='%23453120' fill-opacity='.65' stroke='%23453120' stroke-opacity='.65' stroke-width='1.2'%3E%3Cellipse cx='22' cy='40' rx='4.2' ry='2.9' transform='rotate(-20 22 40)'/%3E%3Cpath d='M25.8 39V18'/%3E%3Cellipse cx='58' cy='29' rx='4.2' ry='2.9' transform='rotate(-20 58 29)'/%3E%3Cpath d='M61.8 28V8'/%3E%3Cellipse cx='96' cy='44' rx='4.2' ry='2.9' transform='rotate(-20 96 44)'/%3E%3Cpath d='M99.8 43V22l9 4'/%3E%3Cpath d='M136 19v28' stroke-width='1.6'/%3E%3C/g%3E%3C/svg%3E"),
+    repeating-linear-gradient(transparent 0 19px,
+      rgba(70, 50, 30, 0.5) 19px 20px, transparent 20px 26px,
+      rgba(70, 50, 30, 0.5) 26px 27px, transparent 27px 33px,
+      rgba(70, 50, 30, 0.5) 33px 34px, transparent 34px 40px,
+      rgba(70, 50, 30, 0.5) 40px 41px, transparent 41px 47px,
+      rgba(70, 50, 30, 0.5) 47px 48px, transparent 48px 70px);
+  background-size: auto, auto, 150px 70px, auto;
+}
+
+/* Tiny five-petal flowers on cream */
+.paper--floral {
+  background-color: #fbf1e6;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cg fill='%23e79bb0'%3E%3Ccircle cx='16' cy='10' r='4'/%3E%3Ccircle cx='22' cy='15' r='4'/%3E%3Ccircle cx='20' cy='22' r='4'/%3E%3Ccircle cx='12' cy='22' r='4'/%3E%3Ccircle cx='10' cy='15' r='4'/%3E%3C/g%3E%3Ccircle cx='16' cy='17' r='3' fill='%23f2c94c'/%3E%3Cg fill='%238fb3dc'%3E%3Ccircle cx='48' cy='40' r='3.4'/%3E%3Ccircle cx='53' cy='44' r='3.4'/%3E%3Ccircle cx='51' cy='50' r='3.4'/%3E%3Ccircle cx='45' cy='50' r='3.4'/%3E%3Ccircle cx='43' cy='44' r='3.4'/%3E%3C/g%3E%3Ccircle cx='48' cy='46' r='2.4' fill='%23fff6d8'/%3E%3Cpath d='M36 14q6 4 4 10M6 44q5-2 8 3M56 6q-4 5 0 9' stroke='%2385a878' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 64px 64px;
+}
+
+/* Brown kraft paper with speckles */
+.paper--kraft {
+  background-color: #c9a678;
+  background-image:
+    radial-gradient(rgba(90, 60, 30, 0.25) 1px, transparent 1.4px),
+    radial-gradient(rgba(255, 240, 210, 0.25) 1px, transparent 1.4px);
+  background-size: 9px 11px, 13px 7px;
+  background-position: 0 0, 4px 3px;
+}
+
+/* Ripped bottom edge: a zig-zag "mask" cuts the paper away */
+.torn-bottom {
+  --tear: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='9'%3E%3Cpath d='M0 0H48V3L44 7 40 3.5 35 8 31 4 26 7 22 3 17 8 12 4 8 7 4 3.5 0 6Z'/%3E%3C/svg%3E");
+  -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 8px) no-repeat, var(--tear) bottom / 48px 9px repeat-x;
+          mask: linear-gradient(#000 0 0) top / 100% calc(100% - 8px) no-repeat, var(--tear) bottom / 48px 9px repeat-x;
+}
+
+/* --- Washi tape: position with --x, --y, rotate with --r, length with --w --- */
+.washi {
+  position: absolute;
+  left: var(--x, 0);
+  top: var(--y, 0);
+  width: var(--w, 112px);
+  height: 26px;
+  rotate: var(--r, -6deg);
+  background-color: var(--tape-pink);
+  clip-path: polygon(2% 0, 98% 0, 100% 16%, 97% 33%, 100% 50%, 97% 67%, 100% 84%, 98% 100%,
+                     2% 100%, 0 84%, 3% 67%, 0 50%, 3% 33%, 0 16%);
+  pointer-events: none;
+  z-index: 2;
+}
+.washi--pink   { background-color: var(--tape-pink); }
+.washi--mint   { background-color: var(--tape-mint); }
+.washi--yellow { background-color: var(--tape-yellow); }
+.washi--dots   { background-image: radial-gradient(rgba(255, 255, 255, 0.75) 2px, transparent 2.6px); background-size: 10px 10px; }
+.washi--red-gingham {
+  background-color: rgba(255, 250, 244, 0.85);
+  background-image:
+    linear-gradient(90deg, var(--tape-red) 50%, transparent 50%),
+    linear-gradient(rgba(214, 78, 72, 0.55) 50%, transparent 50%);
+  background-size: 10px 10px;
+}
+
+/* --- Label-maker strip (embossed tape) --- */
+.label-strip {
+  display: inline-block;
+  margin: 0;
+  padding: 0.3em 0.75em 0.25em;
+  background: var(--label-bg);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.1), transparent 45%, rgba(0, 0, 0, 0.18));
+  color: var(--label-text);
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  border-radius: 2px;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7), 0 -1px 0 rgba(255, 255, 255, 0.22);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+.label-strip--button { border: 0; transition: transform 0.15s ease; }
+.label-strip--button:hover { transform: translateY(-2px) rotate(-1deg); }
+
+/* --- Highlighter strip (rough-edged yellow) --- */
+.highlight-strip {
+  padding: 0 0.45em;
+  background: linear-gradient(100deg, transparent 0.25em, var(--highlighter) 0.4em,
+                              var(--highlighter) calc(100% - 0.4em), transparent calc(100% - 0.25em));
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* --- Ransom-note letters (built by JB.makeRansom in craft.js) --- */
+.ransom-letter {
+  display: inline-block;
+  margin: 0 0.03em;
+  padding: 0.04em 0.14em 0.02em;
+  font-family: var(--f);
+  font-size: calc(1em * var(--s, 1));
+  line-height: 1;
+  background: var(--bg);
+  color: var(--fg);
+  rotate: var(--r, 0deg);
+  box-shadow: 1px 2px 2px rgba(40, 20, 5, 0.3);
+}
+.ransom-space { display: inline-block; width: 0.35em; }
+
+
+/* ---------- 5. JEWEL CASE ---------- */
+/* Real jewel cases are 142 × 125 mm, so we keep that shape. */
+.jewel-case {
+  position: relative;
+  width: var(--case-size);
+  aspect-ratio: 142 / 125;
+  padding: 3.2% 3.2% 3.2% 10.5%;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.07) 40%, rgba(255, 255, 255, 0.16));
+  box-shadow:
+    var(--shadow-case),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.16),
+    inset 0 0 14px rgba(255, 255, 255, 0.28);
+}
+
+/* The ribbed hinge along the left edge */
+.jewel-case__spine {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 7.5%;
+  border-radius: 6px 0 0 6px;
+  border-right: 1px solid rgba(255, 255, 255, 0.55);
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.32) 0 1px, rgba(255, 255, 255, 0.05) 1px 4px);
+}
+/* Hinge pins at the top and bottom */
+.jewel-case__spine::before,
+.jewel-case__spine::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  width: 8px;
+  height: 9%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.2));
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+.jewel-case__spine::before { top: 4%; }
+.jewel-case__spine::after  { bottom: 4%; }
+
+/* The paper insert sits behind the clear lid */
+.jewel-case__window {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+/* Plastic glare across the lid: two diagonal streaks */
+.jewel-case::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 5;
+  background:
+    linear-gradient(118deg, transparent 28%, rgba(255, 255, 255, 0.34) 36%, rgba(255, 255, 255, 0.08) 43%, transparent 50%),
+    linear-gradient(118deg, transparent 58%, rgba(255, 255, 255, 0.16) 61%, transparent 66%);
+}
+
+.jewel-case--small { --case-size: 100%; }
+
+.cover-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.placeholder-note {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  rotate: -3deg;
+  margin: 0;
+  padding: 10px 18px;
+  background: var(--paper-white);
+  font-family: var(--font-hand);
+  font-size: clamp(1.3rem, 4vw, 1.9rem);
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Tracklist sample (stage 3 makes this real) */
+.tracklist-sample { padding: 22px 18px 18px 48px; font-family: var(--font-hand); font-size: clamp(1.15rem, 3.4vw, 1.55rem); font-weight: 700; }
+.tracklist-sample__heading { margin: 0 0 12px; font-size: 1.4em; }
+.tracklist-sample ol { margin: 0; padding-left: 1.2em; line-height: 1.9; }
+
+
+/* ---------- 6. CD-R DISC ---------- */
+/* Layers, from the center out: hole → clear plastic hub → mirror band → data surface.
+   The percentages are of the disc's radius. */
+.cd {
+  --surface: conic-gradient(from 200deg,
+    #dfe3e8, #f6f2ff, #cfe8f2, #e8d3ef, #f6f0d1, #d3dbe6, #c8d6df, #f0e9ff, #dfe3e8);
+  position: relative;
+  width: var(--disc-size);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  /* the clear plastic hub + its stacking ring */
+  background: radial-gradient(circle closest-side,
+    transparent 0 13%,
+    rgba(255, 255, 255, 0.45) 13% 14%,
+    rgba(228, 234, 240, 0.3) 14% 24%,
+    rgba(255, 255, 255, 0.55) 24% 25%,
+    rgba(228, 234, 240, 0.25) 25% 33%,
+    transparent 33%);
+  /* punch the center hole all the way through */
+  -webkit-mask: radial-gradient(circle closest-side, transparent 0 13%, #000 13.3%);
+          mask: radial-gradient(circle closest-side, transparent 0 13%, #000 13.3%);
+}
+
+/* The shiny recordable surface */
+.cd::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle closest-side, transparent 98.5%, rgba(0, 0, 0, 0.12) 99%),
+    radial-gradient(circle closest-side, rgba(255, 255, 255, 0.5) 33% 34%, transparent 35%),
+    var(--surface);
+  -webkit-mask: radial-gradient(circle closest-side, transparent 0 33%, #000 33.4%);
+          mask: radial-gradient(circle closest-side, transparent 0 33%, #000 33.4%);
+}
+
+/* Light glinting off the disc */
+.cd::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 25deg,
+    transparent 0 6%, rgba(255, 255, 255, 0.6) 11%, transparent 17% 48%,
+    rgba(255, 255, 255, 0.45) 58%, transparent 65%);
+  mix-blend-mode: screen;
+  -webkit-mask: radial-gradient(circle closest-side, transparent 0 33%, #000 33.4%);
+          mask: radial-gradient(circle closest-side, transparent 0 33%, #000 33.4%);
+  pointer-events: none;
+}
+
+.cd--gold {
+  --surface: conic-gradient(from 200deg,
+    #e9cf8a, #f7e7b4, #d9b56a, #f3dc9a, #f0d3c2, #e2c07a, #c99f52, #f5e3a8, #e9cf8a);
+}
+
+.disc-stage {
+  display: grid;
+  place-items: center;
+  padding: 10px 0;
+  /* drop-shadow follows the round shape (box-shadow would be cut by the mask) */
+  filter: drop-shadow(0 16px 22px rgba(40, 22, 8, 0.45));
+}
+
+.cd__title {
+  position: absolute;
+  left: 50%;
+  bottom: 14%;
+  z-index: 1;
+  translate: -50% 0;
+  rotate: -6deg;
+  width: 60%;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-marker);
+  font-size: calc(var(--disc-size) * 0.055);
+  line-height: 1.2;
+  color: var(--sharpie);
+}
+
+
+/* ---------- 7. STUDIO LAYOUT + TOOL TRAY ---------- */
+.studio-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+/* Index-card folder tabs */
+.studio-tab {
+  padding: 8px 18px 6px;
+  border: 0;
+  border-radius: 10px 10px 0 0;
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+  font-weight: 700;
+  background: #f7d9de;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.08);
+  opacity: 0.8;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.studio-tab[data-tab="tracklist"] { background: #d4ecdf; }
+.studio-tab[data-tab="disc"]      { background: #fbeab0; }
+.studio-tab:hover { opacity: 1; }
+.studio-tab[aria-selected="true"] {
+  opacity: 1;
+  transform: translateY(-4px);
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.studio-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--tray-width);
+  gap: 32px;
+  align-items: start;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.workspace {
+  display: grid;
+  justify-items: center;
+}
+
+.tool-tray {
+  position: relative;
+  padding: 26px 20px 34px;
+  box-shadow: var(--shadow-soft);
+  rotate: 0.6deg;
+}
+.tool-tray h3 { font-size: 0.8rem; }
+
+.tray-note {
+  font-family: var(--font-hand);
+  font-size: 1.15rem;
+  line-height: 1.25;
+}
+
+.tray-heading {
+  margin: 18px 0 8px;
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.swatch {
+  aspect-ratio: 1;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s ease;
+}
+.swatch:hover { transform: rotate(-4deg) scale(1.06); }
+.swatch[aria-pressed="true"] { outline: 2px solid var(--sharpie); outline-offset: 2px; }
+
+.finish-buttons { display: flex; gap: 8px; }
+
+.chip {
+  padding: 4px 14px;
+  border: 1.5px solid var(--sharpie);
+  border-radius: 999px;
+  background: var(--paper-white);
+  font-family: var(--font-hand);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.chip[aria-pressed="true"] { background: var(--sharpie); color: var(--paper-white); }
+
+@media (max-width: 860px) {
+  .studio-layout { grid-template-columns: minmax(0, 1fr); }
+  .tool-tray { max-width: 540px; width: 100%; margin: 0 auto; rotate: 0deg; }
+}
+
+
+/* ---------- 8. LIBRARY + STASH ---------- */
+.view { max-width: 980px; margin: 0 auto; }
+
+.section-title {
+  margin: 0 0 18px;
+  text-align: center;
+  font-family: var(--font-marker);
+  font-weight: normal;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+}
+
+.sticky-note {
+  position: relative;
+  max-width: 360px;
+  margin: 0 auto 28px;
+  padding: 22px 20px 18px;
+  background: #fff3a6;
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+  line-height: 1.25;
+  box-shadow: var(--shadow-soft);
+  rotate: -1.5deg;
+}
+
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 30px 24px;
+}
+
+.shelf-item { display: grid; justify-items: center; gap: 8px; }
+.shelf-item__title { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.7rem; }
+.shelf-item__by { margin: 0; font-family: var(--font-hand); font-size: 1.15rem; color: #2e1f14; }
+
+/* Index card: white with a red top rule and blue lines */
+.index-card {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 30px 26px 22px;
+  background-color: var(--paper-white);
+  background-image:
+    linear-gradient(transparent 20px, rgba(var(--margin-red), 0.65) 20px 22px, transparent 22px),
+    repeating-linear-gradient(transparent 0 31px, rgba(var(--notebook-line), 0.3) 31px 32px);
+  background-position: 0 0, 0 26px;
+  box-shadow: var(--shadow-soft);
+  rotate: -0.8deg;
+}
+
+.index-card__intro { margin: 0 0 6px; font-family: var(--font-hand); font-size: 1.25rem; line-height: 1.2; }
+
+.field { display: grid; gap: 2px; }
+.field__label { font-family: var(--font-label); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; }
+.field input {
+  width: 100%;
+  padding: 4px 2px;
+  border: 0;
+  border-bottom: 2px solid var(--sharpie);
+  background: transparent;
+  font-family: var(--font-hand);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--sharpie);
+}
+.field input:focus { outline: none; border-bottom-style: dashed; }
+
+.index-card .label-strip--button { justify-self: start; margin-top: 4px; }
+.index-card__fine-print { margin: 0; font-size: 0.78rem; opacity: 0.75; }
+.index-card__message { margin: 0; font-family: var(--font-hand); font-size: 1.2rem; min-height: 1.2em; }
+
+.footer {
+  margin-top: 54px;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: 1.2rem;
+  color: rgba(255, 245, 228, 0.85);
+}
+
+
+/* ---------- 9. HELPERS ---------- */
+[hidden] { display: none !important; }
+
+/* Hidden on screen, but still read aloud by screen readers */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Respect "reduce motion" settings (spinning CDs etc. will check this later) */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

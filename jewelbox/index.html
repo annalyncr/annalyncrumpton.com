@@ -1,12 +1,162 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jewelbox</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jewelbox</title>
+  <meta name="description" content="Make a mix CD, decorate the jewel case, and share it.">
+
+  <!-- Fonts: Sharpie, handwriting, typewriter, label-maker, and ransom-note "magazine" letters -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Archivo+Black&family=Caveat:wght@500;700&family=Courier+Prime:wght@700&family=Permanent+Marker&family=Playfair+Display:ital,wght@1,900&family=Rubik+Mono+One&family=Special+Elite&display=swap">
+
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Welcome to my Jewelbox!</h1>
+
+  <!-- ============ HEADER ============ -->
+  <header class="topbar">
+    <a class="back-link label-strip" href="../index.html">← back to reef</a>
+
+    <h1 class="logo">
+      <span class="visually-hidden">jewelbox</span>
+      <span data-ransom="jewelbox" aria-hidden="true"></span>
+    </h1>
+    <p class="tagline">make a mix · decorate the case · pass it on</p>
+
+    <nav class="main-nav" aria-label="jewelbox sections">
+      <a class="nav-tab" href="#studio"  data-nav="studio">cd studio</a>
+      <a class="nav-tab" href="#library" data-nav="library">community library</a>
+      <a class="nav-tab" href="#stash"   data-nav="stash">my stash</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ============ VIEW 1: CD STUDIO ============ -->
+    <section class="view" data-view="studio" aria-labelledby="studio-heading">
+      <h2 id="studio-heading" class="visually-hidden">CD Studio</h2>
+
+      <div class="studio-tabs" role="tablist" aria-label="Studio steps">
+        <button class="studio-tab" role="tab" data-tab="cover"     aria-selected="true"  aria-controls="panel-cover"     id="tab-cover">1 · cover</button>
+        <button class="studio-tab" role="tab" data-tab="tracklist" aria-selected="false" aria-controls="panel-tracklist" id="tab-tracklist" tabindex="-1">2 · tracklist</button>
+        <button class="studio-tab" role="tab" data-tab="disc"      aria-selected="false" aria-controls="panel-disc"      id="tab-disc" tabindex="-1">3 · disc</button>
+      </div>
+
+      <div class="studio-layout">
+
+        <!-- The thing you're decorating -->
+        <div class="workspace">
+
+          <!-- Tab 1: Cover -->
+          <div class="tab-panel" role="tabpanel" id="panel-cover" data-panel="cover" aria-labelledby="tab-cover">
+            <div class="jewel-case">
+              <div class="jewel-case__spine"></div>
+              <div class="jewel-case__window">
+                <div class="cover-canvas paper paper--gingham-blue" id="cover-canvas">
+                  <span class="washi washi--pink" style="--x: 6%; --y: 7%; --r: -9deg;"></span>
+                  <span class="washi washi--mint washi--dots" style="--x: 62%; --y: 84%; --r: 6deg;"></span>
+                  <p class="placeholder-note">your cover goes here ✶</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Tracklist -->
+          <div class="tab-panel" role="tabpanel" id="panel-tracklist" data-panel="tracklist" aria-labelledby="tab-tracklist" hidden>
+            <div class="jewel-case">
+              <div class="jewel-case__spine"></div>
+              <div class="jewel-case__window">
+                <div class="cover-canvas paper paper--lined tracklist-sample">
+                  <p class="tracklist-sample__heading"><span class="visually-hidden">track list</span><span data-ransom="track list" aria-hidden="true"></span></p>
+                  <ol>
+                    <li><span class="highlight-strip">song title · artist</span></li>
+                    <li><span class="highlight-strip">another song · someone</span></li>
+                    <li><span class="highlight-strip">the slow one · a band</span></li>
+                    <li><span class="highlight-strip">the closer · you know who</span></li>
+                  </ol>
+                  <span class="washi washi--yellow" style="--x: 64%; --y: 4%; --r: 8deg;"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 3: Disc -->
+          <div class="tab-panel" role="tabpanel" id="panel-disc" data-panel="disc" aria-labelledby="tab-disc" hidden>
+            <div class="disc-stage">
+              <div class="cd" id="disc-preview">
+                <p class="cd__title">songs that remind me of you</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tool tray (real tools arrive in stages 2–4) -->
+        <aside class="tool-tray paper paper--graph torn-bottom" aria-label="Tools">
+          <span class="washi washi--red-gingham" style="--x: 34%; --y: -10px; --r: -3deg;"></span>
+          <h3 class="label-strip">tools</h3>
+
+          <p class="tray-note">Stage 1 preview: try the paper samples and CD finishes. The real tools (stickers, text, marker) arrive in stage 2.</p>
+
+          <h4 class="tray-heading">paper samples</h4>
+          <div class="swatches">
+            <button class="swatch paper paper--gingham-blue" data-paper="gingham-blue" aria-pressed="true"  title="blue gingham"><span class="visually-hidden">blue gingham</span></button>
+            <button class="swatch paper paper--gingham-red"  data-paper="gingham-red"  aria-pressed="false" title="red gingham"><span class="visually-hidden">red gingham</span></button>
+            <button class="swatch paper paper--graph"        data-paper="graph"        aria-pressed="false" title="graph paper"><span class="visually-hidden">graph paper</span></button>
+            <button class="swatch paper paper--lined"        data-paper="lined"        aria-pressed="false" title="notebook paper"><span class="visually-hidden">notebook paper</span></button>
+            <button class="swatch paper paper--sheet-music"  data-paper="sheet-music"  aria-pressed="false" title="vintage sheet music"><span class="visually-hidden">vintage sheet music</span></button>
+            <button class="swatch paper paper--floral"       data-paper="floral"       aria-pressed="false" title="floral"><span class="visually-hidden">floral</span></button>
+            <button class="swatch paper paper--kraft"        data-paper="kraft"        aria-pressed="false" title="kraft paper"><span class="visually-hidden">kraft paper</span></button>
+          </div>
+
+          <h4 class="tray-heading">cd finish</h4>
+          <div class="finish-buttons">
+            <button class="chip" data-finish="silver" aria-pressed="true">silver</button>
+            <button class="chip" data-finish="gold"   aria-pressed="false">gold</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ VIEW 2: COMMUNITY LIBRARY ============ -->
+    <section class="view" data-view="library" aria-labelledby="library-heading" hidden>
+      <h2 id="library-heading" class="section-title"><span class="highlight-strip">community library</span></h2>
+      <p class="sticky-note" id="library-status" role="status">Flipping through the crate…</p>
+      <div class="library-grid" id="library-grid"></div>
+    </section>
+
+    <!-- ============ VIEW 3: MY STASH ============ -->
+    <section class="view" data-view="stash" aria-labelledby="stash-heading" hidden>
+      <h2 id="stash-heading" class="section-title"><span class="highlight-strip">my stash</span></h2>
+
+      <form class="index-card" id="stash-form">
+        <span class="washi washi--pink washi--dots" style="--x: 38%; --y: -12px; --r: 2deg;"></span>
+        <p class="index-card__intro">Enter the name + secret word you used when you published to see, edit, or delete your CDs.</p>
+
+        <label class="field">
+          <span class="field__label">creator name</span>
+          <input name="creatorName" autocomplete="nickname" maxlength="40" required>
+        </label>
+        <label class="field">
+          <span class="field__label">secret word</span>
+          <input name="secretWord" type="password" autocomplete="current-password" minlength="4" required>
+        </label>
+
+        <button class="label-strip label-strip--button" type="submit">unlock my stash</button>
+        <p class="index-card__fine-print">Psst: a secret word isn't a real password, so don't reuse one you use anywhere else.</p>
+        <p class="index-card__message" id="stash-message" role="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">made with tape, glue &amp; good songs</footer>
+
+  <!-- Scripts load in order: Supabase library → your keys → jewelbox files -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+  <script src="config.js"></script>
+  <script src="js/craft.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
