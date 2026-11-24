@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { signIn } from './data'
+import Deer from './components/Deer'
 
 // Email + password login. The autoComplete hints let iPhone's Passwords /
 // Face ID offer to save and fill in your login.
@@ -24,7 +25,8 @@ export default function Login() {
 
   return (
     <main className="card">
-      <h1>ohdeer</h1>
+      <Deer pose="standing" width={140} className="login-deer" />
+      <h1 className="login-title">ohdeer</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">Email</label>
         <input id="email" type="email" required autoComplete="username"

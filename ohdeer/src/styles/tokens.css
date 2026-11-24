@@ -1,0 +1,58 @@
+/* =====================================================================
+   ohdeer DESIGN TOKENS
+   Every color, font, corner and spacing value lives here. Change a value
+   here and the whole app follows. (Other CSS uses these via var(--name).)
+   ===================================================================== */
+:root {
+  /* ---------- Palette (sampled from the reference images) ---------- */
+  --c-moss:        #6E7B35;  /* the 2025 calendar's olive-green paper */
+  --c-moss-dark:   #5C6A2B;
+  --c-olive:       #8A9A3E;  /* April hills */
+  --c-forest:      #2F3B1F;  /* deep shadows under trees */
+  --c-sage:        #9BAA7E;  /* soft "My Forest" green */
+  --c-sage-light:  #DDE3C8;
+  --c-cream:       #F3ECDC;  /* paper */
+  --c-cream-deep:  #E7DDC4;  /* paper in shadow */
+  --c-bark:        #5A4430;
+  --c-fawn:        #C98A5A;  /* the deer */
+  --c-fawn-dark:   #A86D42;
+  --c-teal:        #5E8C8A;  /* slate-teal accent (April rocks) */
+  --c-rust:        #B8582E;  /* rust accent (April wildflowers) */
+
+  /* ---------- Roles: what each color is FOR ---------- */
+  --bg:            var(--c-moss);       /* page background */
+  --on-bg:         var(--c-cream);      /* text/lines drawn on the background */
+  --paper:         var(--c-cream);      /* cards */
+  --paper-deep:    var(--c-cream-deep);
+  --paper-white:   #FBF7EE;             /* inputs, inner cards */
+  --ink:           var(--c-forest);     /* main text and outlines */
+  --ink-soft:      #5E6650;             /* secondary text */
+  --accent:        var(--c-rust);       /* "today", delete, highlights */
+  --accent-2:      var(--c-teal);
+  --line:          var(--c-forest);     /* hand-drawn borders */
+
+  /* ---------- Fonts (loaded from Google Fonts in index.html) ---------- */
+  --font-display: 'Gaegu', 'Comic Sans MS', cursive;  /* headings, month names */
+  --font-body:    'Nunito', system-ui, sans-serif;     /* everything else */
+
+  /* ---------- Corners ---------- */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  /* Lopsided corners that look hand-cut instead of machine-perfect */
+  --radius-wobbly:      255px 18px 225px 18px / 18px 225px 18px 255px;
+  --radius-wobbly-soft: 18px 24px 16px 26px / 24px 16px 26px 18px;
+
+  /* ---------- Spacing ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* ---------- Texture & depth ---------- */
+  --border-width: 2px;
+  --grain-opacity: 0.16;   /* paper grain strength: 0 = off, 0.3 = heavy */
+  --shadow-paper: 0 2px 0 rgba(47, 59, 31, 0.18), 0 10px 24px rgba(30, 38, 18, 0.18);
+}

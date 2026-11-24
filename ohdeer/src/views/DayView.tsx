@@ -5,8 +5,9 @@ import { deleteEntry, type Entry } from '../data'
 import { useDateParams } from '../hooks/useDateParams'
 import { useEntries } from '../hooks/useEntries'
 import { useTypes } from '../hooks/TypesContext'
-import { MONTH_NAMES, addDays, dayPath, formatLongDate, isoDate, monthPath, todayISO, type DayParts } from '../lib/dates'
+import { MONTH_NAMES, addDays, dayPath, formatLongDate, formatWeekday, isoDate, monthPath, todayISO, type DayParts } from '../lib/dates'
 import EntryForm from '../components/EntryForm'
+import Deer from '../components/Deer'
 import TypeBadge from '../components/TypeBadge'
 
 export default function DayRoute() {
@@ -42,7 +43,11 @@ function DayView({ day }: { day: DayParts }) {
       </p>
       <header className="view-header">
         <Link to={dayPath(addDays(day, -1))} className="nav-arrow" aria-label="Previous day">‹</Link>
-        <h1>{formatLongDate(day)}</h1>
+        {/* Two lines: a small weekday above the big date (the year is in the link above) */}
+        <h1 className="day-title" aria-label={formatLongDate(day)}>
+          <small>{formatWeekday(day)}</small>
+          {MONTH_NAMES[day.month - 1]} {day.day}
+        </h1>
         <Link to={dayPath(addDays(day, 1))} className="nav-arrow" aria-label="Next day">›</Link>
       </header>
 
@@ -50,10 +55,21 @@ function DayView({ day }: { day: DayParts }) {
         {error && <p className="error">{error}</p>}
         {loading && entries.length === 0 && <p className="muted">Loading…</p>}
         {!loading && entries.length === 0 && !adding && (
-          <p className="empty">{date === todayISO() ? 'Nothing logged today.' : 'Nothing logged on this day.'}</p>
+          // Today: a curious deer waiting. Other days: a sleeping one.
+          date === todayISO() ? (
+            <div className="empty">
+              <Deer pose="peeking" width={130} />
+              <p>Nothing logged today.</p>
+            </div>
+          ) : (
+            <div className="empty">
+              <Deer pose="sleeping" width={170} />
+              <p>A quiet day. Nothing logged.</p>
+            </div>
+          )
         )}
 
-        <ul className="entry-list">
+        {entries.length > 0 && <ul className="entry-list">
           {entries.map((entry) => {
             const type = typeById(entry.type_id)
             if (editingId === entry.id) {
@@ -81,14 +97,14 @@ function DayView({ day }: { day: DayParts }) {
               </li>
             )
           })}
-        </ul>
+        </ul>}
 
         {adding ? (
           <EntryForm date={date}
             onDone={() => { setAdding(false); reload() }}
             onCancel={() => setAdding(false)} />
         ) : (
-          <button onClick={() => { setAdding(true); setEditingId(null) }}>+ Add an entry</button>
+          <button className="add-button" onClick={() => { setAdding(true); setEditingId(null) }}>+ Add an entry</button>
         )}
       </div>
     </section>

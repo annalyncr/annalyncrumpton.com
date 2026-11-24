@@ -4,6 +4,7 @@ import { Link, NavLink, Outlet } from 'react-router'
 import { signOut } from '../data'
 import { useTypes } from '../hooks/TypesContext'
 import { dayPath, todayParts, yearPath } from '../lib/dates'
+import DoodleIcon from './DoodleIcon'
 
 export default function Layout() {
   const today = todayParts()
@@ -11,7 +12,9 @@ export default function Layout() {
   return (
     <div className="app">
       <nav className="top-nav">
-        <Link to={yearPath(today.year)} className="brand">ohdeer</Link>
+        <Link to={yearPath(today.year)} className="brand">
+          <DoodleIcon icon="deer" /> ohdeer
+        </Link>
         <NavLink to={dayPath(today)}>Today</NavLink>
         <NavLink to="/types">Types</NavLink>
         <button className="link" onClick={() => signOut()}>Log out</button>

@@ -9,7 +9,7 @@ import {
   MONTH_NAMES, WEEKDAY_LETTERS, isoDate, monthCells, monthPath, todayISO, yearPath,
 } from '../lib/dates'
 import { uniqueTypesByDate } from '../lib/entryUtils'
-import { colorHex } from '../lib/palette'
+import { typeColor } from '../lib/palette'
 
 const MAX_DOTS = 3
 
@@ -58,7 +58,7 @@ function YearView({ year }: { year: number }) {
                         <span className="dots">
                           {typeIds.slice(0, MAX_DOTS).map((id) => (
                             <span key={id} className="dot"
-                              style={{ background: colorHex(typeById(id)?.color ?? 'moss') }} />
+                              style={{ background: typeColor(typeById(id)?.color ?? 'moss') }} />
                           ))}
                           {typeIds.length > MAX_DOTS && <span className="more">+</span>}
                         </span>

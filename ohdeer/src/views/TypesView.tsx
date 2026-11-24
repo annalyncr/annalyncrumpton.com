@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import { archiveType, unarchiveType, type OccurrenceType } from '../data'
 import { useTypes } from '../hooks/TypesContext'
+import Deer from '../components/Deer'
 import TypeBadge from '../components/TypeBadge'
 import TypeForm from '../components/TypeForm'
 
@@ -57,7 +58,10 @@ export default function TypesView() {
       <div className="paper">
         {loading && <p className="muted">Loading…</p>}
         {!loading && active.length === 0 && (
-          <p className="empty">No types yet. Make your first one!</p>
+          <div className="empty">
+            <Deer pose="standing" width={110} />
+            <p>No types yet. Make your first one!</p>
+          </div>
         )}
         <ul className="type-list">{active.map(renderRow)}</ul>
 
@@ -69,7 +73,7 @@ export default function TypesView() {
 
         {archived.length > 0 && (
           <>
-            <h2>Archived</h2>
+            <h2 className="squiggle-heading">Archived</h2>
             <ul className="type-list archived">{archived.map(renderRow)}</ul>
           </>
         )}

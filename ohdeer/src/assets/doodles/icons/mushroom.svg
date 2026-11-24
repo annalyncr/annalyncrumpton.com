@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="#2F3B1F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- "ink" filter: nudges the lines slightly so they look hand-drawn -->
+  <filter id="ink" x="-10%" y="-10%" width="120%" height="120%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed="4"/>
+    <feDisplacementMap in="SourceGraphic" scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <g filter="url(#ink)">
+    <path d="M6.8 24.6c-.1-9.3 7.8-15.8 17.3-15.7 9.4.1 17 6.4 17.1 15.6-11.3 1.3-23.2 1.4-34.4.1z"/>
+    <path d="M18.3 25.6c-.4 5.2-1.3 10.4-.9 15.2 4.4.9 9 1 13.3 0 .4-4.9-.4-10-.9-15.2"/>
+    <path d="M16 16.4c.9-.1 1.6.6 1.6 1.4 0 .9-.7 1.5-1.6 1.5M27.6 13.6c1.1 0 1.9.8 1.8 1.8M33.5 19.1c.4.8.2 1.8-.6 2.1"/>
+  </g>
+</svg>

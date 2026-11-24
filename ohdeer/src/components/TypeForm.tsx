@@ -4,6 +4,7 @@ import { useState, type FormEvent } from 'react'
 import { createType, updateType, type OccurrenceType } from '../data'
 import { ICONS } from '../lib/icons'
 import { PALETTE } from '../lib/palette'
+import DoodleIcon from './DoodleIcon'
 import TypeBadge from './TypeBadge'
 
 interface Props {
@@ -45,7 +46,7 @@ export default function TypeForm({ type, onSaved, onCancel }: Props) {
           <button key={option.key} type="button" className="chip icon-choice"
             aria-pressed={icon === option.key} title={option.name} aria-label={option.name}
             onClick={() => setIcon(option.key)}>
-            {option.emoji}
+            <DoodleIcon icon={option.key} />
           </button>
         ))}
       </fieldset>
@@ -55,7 +56,7 @@ export default function TypeForm({ type, onSaved, onCancel }: Props) {
         {PALETTE.map((option) => (
           <button key={option.key} type="button" className="swatch"
             aria-pressed={color === option.key} title={option.name} aria-label={option.name}
-            style={{ background: option.hex }}
+            style={{ background: option.value }}
             onClick={() => setColor(option.key)} />
         ))}
       </fieldset>

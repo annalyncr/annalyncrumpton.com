@@ -62,6 +62,11 @@ export function formatLongDate({ year, month, day }: DayParts): string {
   })
 }
 
+/** 'Tuesday' */
+export function formatWeekday({ year, month, day }: DayParts): string {
+  return new Date(year, month - 1, day).toLocaleDateString(undefined, { weekday: 'long' })
+}
+
 // Web addresses for each screen, kept in one place.
 export const yearPath = (year: number) => `/${year}`
 export const monthPath = (year: number, month: number) => `/${year}/${month}`
