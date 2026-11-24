@@ -1,0 +1,26 @@
+/* Plain placeholder styling for phase 1. The real forest look arrives in phase 3. */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: #6E7B35;
+  color: #2F3B1F;
+  font-family: system-ui, sans-serif;
+}
+.card {
+  width: 100%;
+  max-width: 380px;
+  background: #F3ECDC;
+  border-radius: 16px;
+  padding: 24px;
+}
+form { display: grid; gap: 10px; }
+input, button { font: inherit; padding: 10px 12px; border-radius: 10px; }
+input { border: 1.5px solid #6E7B35; background: white; }
+button { border: none; background: #2F3B1F; color: #F3ECDC; cursor: pointer; }
+button:disabled { opacity: 0.6; }
+button.link { background: none; color: #2F3B1F; text-decoration: underline; }
+.error { color: #B8582E; }

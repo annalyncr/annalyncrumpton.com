@@ -1,0 +1,8 @@
+# Installed packages (re-created by "npm install")
+node_modules
+# Build output (Vercel builds this itself)
+dist
+# Secret-ish settings: never commit these
+.env
+.env.local
+.DS_Store
