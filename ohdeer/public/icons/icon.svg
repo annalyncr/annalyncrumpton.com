@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- ohdeer app icon -->
+  <filter id="crayon" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="grain"/>
+    <feColorMatrix in="grain" type="matrix" result="speckle"
+      values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3.2 0 0 0 -0.55"/>
+    <feComposite in="SourceGraphic" in2="speckle" operator="in" result="textured"/>
+    <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="3" result="warp"/>
+    <feDisplacementMap in="textured" in2="warp" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <rect width="200" height="200" fill="#56703F"/>
+  <circle cx="100" cy="112" r="74" fill="#F3ECDC"/>
+  <g filter="url(#crayon)" transform="translate(100 108) scale(1.28) translate(-100 -80)">
+    <path fill="#D9A07A" d="M78 68c-15-1-28-12-30-27 15-3 29 5 33 19z"/>
+    <path fill="#EDBFA3" d="M73 62c-9-2-16-9-18-17 9-1 17 4 20 12z"/>
+    <path fill="#D9A07A" d="M122 68c15-1 28-12 30-27-15-3-29 5-33 19z"/>
+    <path fill="#EDBFA3" d="M127 62c9-2 16-9 18-17-9-1-17 4-20 12z"/>
+    <path fill="#C98A5A" d="M100 50c16 0 26 11 26 27 0 14-7 26-15 34-4 4-7 6-11 6s-7-2-11-6c-8-8-15-20-15-34 0-16 10-27 26-27z"/>
+    <ellipse fill="#2A2018" cx="90" cy="81" rx="2.8" ry="4.2"/>
+    <ellipse fill="#2A2018" cx="110" cy="81" rx="2.8" ry="4.2"/>
+    <path fill="#2A2018" d="M94.5 103c3.5-2.4 7.5-2.4 11 0 .2 4.4-2.8 7-5.5 7s-5.7-2.6-5.5-7z"/>
+  </g>
+</svg>

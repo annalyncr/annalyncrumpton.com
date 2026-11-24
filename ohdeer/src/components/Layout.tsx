@@ -1,7 +1,6 @@
 // The frame around every screen: the nav bar on top, the current screen
 // below. <Outlet /> is where React Router puts the current screen.
 import { Link, NavLink, Outlet } from 'react-router'
-import { signOut } from '../data'
 import { useTypes } from '../hooks/TypesContext'
 import { dayPath, todayParts, yearPath } from '../lib/dates'
 import DoodleIcon from './DoodleIcon'
@@ -16,8 +15,8 @@ export default function Layout() {
           <DoodleIcon icon="deer" /> ohdeer
         </Link>
         <NavLink to={dayPath(today)} className="nav-button">Today</NavLink>
-        <NavLink to="/types" className="nav-button">Types</NavLink>
-        <button className="nav-button quiet" onClick={() => signOut()}>Log out</button>
+        <NavLink to="/stats" className="nav-button">Stats</NavLink>
+        <NavLink to="/more" className="nav-button">More</NavLink>
       </nav>
       {error && <p className="error">Couldn't load your types: {error}</p>}
       <main className="screen">

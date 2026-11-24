@@ -9,7 +9,8 @@ import Login from './Login'
 import YearView from './views/YearView'
 import MonthView from './views/MonthView'
 import DayView from './views/DayView'
-import TypesView from './views/TypesView'
+import StatsView from './views/StatsView'
+import MoreView from './views/MoreView'
 
 // App decides what to show: a setup message, the login screen, or the app.
 export default function App() {
@@ -47,7 +48,10 @@ export default function App() {
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<Navigate to={yearPath(todayParts().year)} replace />} />
-            <Route path="types" element={<TypesView />} />
+            <Route path="stats" element={<StatsView />} />
+            <Route path="stats/:year" element={<StatsView />} />
+            <Route path="more" element={<MoreView />} />
+            <Route path="types" element={<Navigate to="/more" replace />} />
             <Route path=":year" element={<YearView />} />
             <Route path=":year/:month" element={<MonthView />} />
             <Route path=":year/:month/:day" element={<DayView />} />

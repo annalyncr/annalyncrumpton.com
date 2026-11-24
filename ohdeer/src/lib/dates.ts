@@ -67,7 +67,15 @@ export function formatWeekday({ year, month, day }: DayParts): string {
   return new Date(year, month - 1, day).toLocaleDateString(undefined, { weekday: 'long' })
 }
 
+/** Whole days from date a to date b ('YYYY-MM-DD'). Uses UTC so daylight
+ *  saving changes can't make a day 23 or 25 hours long. */
+export function daysBetween(a: string, b: string): number {
+  const toUTC = (s: string) => Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10))
+  return Math.round((toUTC(b) - toUTC(a)) / 86_400_000)
+}
+
 // Web addresses for each screen, kept in one place.
 export const yearPath = (year: number) => `/${year}`
 export const monthPath = (year: number, month: number) => `/${year}/${month}`
 export const dayPath = ({ year, month, day }: DayParts) => `/${year}/${month}/${day}`
+export const statsPath = (year: number) => `/stats/${year}`

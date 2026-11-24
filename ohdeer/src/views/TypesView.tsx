@@ -53,9 +53,9 @@ export default function TypesView() {
   }
 
   return (
-    <section>
-      <header className="view-header"><h1>Your types</h1></header>
+    <section className="more-section">
       <div className="paper">
+        <h2 className="squiggle-heading">Types</h2>
         {loading && <p className="muted">Loading…</p>}
         {!loading && active.length === 0 && (
           <div className="empty">
