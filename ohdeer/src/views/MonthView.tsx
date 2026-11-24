@@ -10,6 +10,7 @@ import {
   monthCells, monthPath, todayISO, yearPath,
 } from '../lib/dates'
 import { uniqueTypesByDate } from '../lib/entryUtils'
+import { sceneFor } from '../lib/scenes'
 import TypeBadge from '../components/TypeBadge'
 
 const MAX_ICONS = 3
@@ -30,18 +31,26 @@ function MonthView({ year, month }: { year: number; month: number }) {
   const prev = addMonths(year, month, -1)
   const next = addMonths(year, month, 1)
   const today = todayISO()
+  const scene = sceneFor(month)
 
   return (
-    <section>
-      <p className="breadcrumb"><Link to={yearPath(year)}>‹ {year}</Link></p>
-      <header className="view-header">
-        <Link to={monthPath(prev.year, prev.month)} className="nav-arrow" aria-label="Previous month">‹</Link>
-        <h1>{MONTH_NAMES[month - 1]} {year}</h1>
-        <Link to={monthPath(next.year, next.month)} className="nav-arrow" aria-label="Next month">›</Link>
-      </header>
+    <section className="month-view">
+      {/* The illustrated landscape, full width, with the month name over the sky */}
+      <div className="scene torn-bottom">
+        {scene && <img src={scene} alt="" className="scene-img" />}
+        <div className="scene-inner">
+          <p className="breadcrumb"><Link to={yearPath(year)}>‹ {year}</Link></p>
+          <header className="view-header scene-header">
+            <Link to={monthPath(prev.year, prev.month)} className="nav-arrow" aria-label="Previous month">‹</Link>
+            <h1>{MONTH_NAMES[month - 1]} <span className="scene-year">{year}</span></h1>
+            <Link to={monthPath(next.year, next.month)} className="nav-arrow" aria-label="Next month">›</Link>
+          </header>
+        </div>
+      </div>
       {error && <p className="error">{error}</p>}
 
-      <div className={loading ? 'month-grid is-loading' : 'month-grid'}>
+      {/* The calendar sheet, below the scene */}
+      <div className={loading ? 'month-grid month-sheet is-loading' : 'month-grid month-sheet'}>
         {WEEKDAY_LETTERS.map((letter, i) => (
           <span key={`w${i}`} className="weekday">{letter}</span>
         ))}

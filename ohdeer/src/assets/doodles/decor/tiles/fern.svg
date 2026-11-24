@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 90" fill="none" stroke="#2F3B1F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Year-view frame tile. Drawn as lines; the app tints it cream. -->
+  <filter id="ink" x="-10%" y="-10%" width="120%" height="120%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="2" seed="4"/>
+    <feDisplacementMap in="SourceGraphic" scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <g filter="url(#ink)">
+    <path d="M30 84C29 62 31 36 37 8M30.0 78.0c-5.2 -1.3 -11.7 -6.5 -13.0 -11.7M30.0 78.0c5.2 -1.3 11.7 -6.5 13.0 -11.7M30.1 70.7c-4.8 -1.2 -10.8 -6.0 -12.0 -10.8M30.1 70.7c4.8 -1.2 10.8 -6.0 12.0 -10.8M30.3 63.3c-4.4 -1.1 -9.9 -5.5 -11.0 -9.9M30.3 63.3c4.4 -1.1 9.9 -5.5 11.0 -9.9M30.8 56.0c-4.0 -1.0 -9.0 -5.0 -10.0 -9.0M30.8 56.0c4.0 -1.0 9.0 -5.0 10.0 -9.0M31.4 48.7c-3.6 -0.9 -8.1 -4.5 -9.0 -8.1M31.4 48.7c3.6 -0.9 8.1 -4.5 9.0 -8.1M32.2 41.3c-3.2 -0.8 -7.2 -4.0 -7.9 -7.2M32.2 41.3c3.2 -0.8 7.2 -4.0 7.9 -7.2M33.1 34.0c-2.8 -0.7 -6.2 -3.5 -6.9 -6.2M33.1 34.0c2.8 -0.7 6.2 -3.5 6.9 -6.2M34.2 26.7c-2.4 -0.6 -5.3 -3.0 -5.9 -5.3M34.2 26.7c2.4 -0.6 5.3 -3.0 5.9 -5.3M35.5 19.3c-2.0 -0.5 -4.4 -2.5 -4.9 -4.4M35.5 19.3c2.0 -0.5 4.4 -2.5 4.9 -4.4"/>
+  </g>
+</svg>

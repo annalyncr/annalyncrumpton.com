@@ -6,6 +6,7 @@ import { useDateParams } from '../hooks/useDateParams'
 import { useEntries } from '../hooks/useEntries'
 import { useTypes } from '../hooks/TypesContext'
 import { MONTH_NAMES, addDays, dayPath, formatLongDate, formatWeekday, isoDate, monthPath, todayISO, type DayParts } from '../lib/dates'
+import { sceneFor } from '../lib/scenes'
 import EntryForm from '../components/EntryForm'
 import Deer from '../components/Deer'
 import TypeBadge from '../components/TypeBadge'
@@ -51,7 +52,10 @@ function DayView({ day }: { day: DayParts }) {
         <Link to={dayPath(addDays(day, 1))} className="nav-arrow" aria-label="Next day">›</Link>
       </header>
 
-      <div className="paper">
+      <div className="paper day-paper">
+        {/* A strip of this month's scene, torn along the bottom like a
+            scrap of a calendar page */}
+        <img src={sceneFor(day.month)} alt="" className="day-band torn-bottom" />
         {error && <p className="error">{error}</p>}
         {loading && entries.length === 0 && <p className="muted">Loading…</p>}
         {!loading && entries.length === 0 && !adding && (

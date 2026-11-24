@@ -5,8 +5,8 @@
    ===================================================================== */
 :root {
   /* ---------- Palette (sampled from the reference images) ---------- */
-  --c-moss:        #6E7B35;  /* the 2025 calendar's olive-green paper */
-  --c-moss-dark:   #5C6A2B;
+  --c-moss:        #56703F;  /* cool, deep moss green (the page background) */
+  --c-moss-dark:   #465C33;
   --c-olive:       #8A9A3E;  /* April hills */
   --c-forest:      #2F3B1F;  /* deep shadows under trees */
   --c-sage:        #9BAA7E;  /* soft "My Forest" green */

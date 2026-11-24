@@ -15,9 +15,9 @@ export default function Layout() {
         <Link to={yearPath(today.year)} className="brand">
           <DoodleIcon icon="deer" /> ohdeer
         </Link>
-        <NavLink to={dayPath(today)}>Today</NavLink>
-        <NavLink to="/types">Types</NavLink>
-        <button className="link" onClick={() => signOut()}>Log out</button>
+        <NavLink to={dayPath(today)} className="nav-button">Today</NavLink>
+        <NavLink to="/types" className="nav-button">Types</NavLink>
+        <button className="nav-button quiet" onClick={() => signOut()}>Log out</button>
       </nav>
       {error && <p className="error">Couldn't load your types: {error}</p>}
       <main className="screen">

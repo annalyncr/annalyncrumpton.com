@@ -10,6 +10,7 @@ import {
 } from '../lib/dates'
 import { uniqueTypesByDate } from '../lib/entryUtils'
 import { typeColor } from '../lib/palette'
+import { sceneFor } from '../lib/scenes'
 
 const MAX_DOTS = 3
 
@@ -42,6 +43,8 @@ function YearView({ year }: { year: number }) {
           const month = index + 1
           return (
             <Link key={month} to={monthPath(year, month)} className="mini-month">
+              {/* A thin slice of this month's scene, torn along the bottom */}
+              <img src={sceneFor(month)} alt="" className="mini-scene torn-bottom" />
               <h2>{name}</h2>
               <div className="mini-grid">
                 {WEEKDAY_LETTERS.map((letter, i) => (

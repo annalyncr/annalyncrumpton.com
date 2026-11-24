@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+  <!-- Repeating leaf pattern for the page background. Used as a stencil (mask),
+       so only the shapes matter, not their color. -->
+  <g fill="#000">
+    <path transform="translate(14 20) rotate(-30) scale(1.0)" d="M0 0c5-8 15-8 19 0-4 8-14 8-19 0z"/>
+    <path transform="translate(70 12) rotate(40) scale(0.8)" d="M0 0c5-8 15-8 19 0-4 8-14 8-19 0z"/>
+    <path transform="translate(104 58) rotate(160) scale(1.1)" d="M0 0c5-8 15-8 19 0-4 8-14 8-19 0z"/>
+    <path transform="translate(40 70) rotate(100) scale(0.9)" d="M0 0c5-8 15-8 19 0-4 8-14 8-19 0z"/>
+    <path transform="translate(86 100) rotate(-70) scale(0.85)" d="M0 0c5-8 15-8 19 0-4 8-14 8-19 0z"/>
+    <path transform="translate(10 108) rotate(20) scale(0.75)" d="M0 0c5-8 15-8 19 0-4 8-14 8-19 0z"/>
+    <path transform="translate(60 46) rotate(25)" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round" d="M0 0v-20M0 -4l-5-4M0 -4l5-4M0 -10l-4-4M0 -10l4-4M0 -16l-3-3M0 -16l3-3"/>
+    <path transform="translate(110 26) rotate(-35)" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round" d="M0 0v-20M0 -4l-5-4M0 -4l5-4M0 -10l-4-4M0 -10l4-4M0 -16l-3-3M0 -16l3-3"/>
+  </g>
+</svg>

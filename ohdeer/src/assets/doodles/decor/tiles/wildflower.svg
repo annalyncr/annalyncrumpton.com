@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 90" fill="none" stroke="#2F3B1F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Year-view frame tile. Drawn as lines; the app tints it cream. -->
+  <filter id="ink" x="-10%" y="-10%" width="120%" height="120%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="2" seed="4"/>
+    <feDisplacementMap in="SourceGraphic" scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <g filter="url(#ink)">
+    <path d="M30 84c0-18 1-36-1-52"/>
+    <path d="M30 66c-7-2-12-7-13-13 7 0 12 5 13 13zM30 54c6-3 11-8 11-14-6 1-10 7-11 14z"/>
+    <path d="M29 30c-4-4-4-10 0-14 4 4 4 10 0 14zM29 30c-5 2-11 1-14-3 5-3 11-2 14 3zM29 30c5 2 11 1 14-3-5-3-11-2-14 3zM29 30c-3 4-9 6-13 4 2-5 8-6 13-4zM29 30c3 4 9 6 13 4-2-5-8-6-13-4z"/>
+    <path d="M12 10h.1M47 16h.1M50 50h.1"/>
+  </g>
+</svg>
