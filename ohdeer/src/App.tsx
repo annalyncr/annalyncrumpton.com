@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import type { Session } from '@supabase/supabase-js'
-import { getSession, isConfigured, onAuthChange, signOut } from './data'
+import { getSession, isConfigured, onAuthChange } from './data'
+import { TypesProvider } from './hooks/TypesContext'
+import { todayParts, yearPath } from './lib/dates'
+import Layout from './components/Layout'
 import Login from './Login'
+import YearView from './views/YearView'
+import MonthView from './views/MonthView'
+import DayView from './views/DayView'
+import TypesView from './views/TypesView'
 
 // App decides what to show: a setup message, the login screen, or the app.
 export default function App() {
@@ -31,11 +39,22 @@ export default function App() {
   if (loading) return <main className="card"><p>Loading…</p></main>
   if (!session) return <Login />
 
+  // The screens and their web addresses. ":year" etc. are placeholders,
+  // so "/2026/11/24" opens the day view for November 24, 2026.
   return (
-    <main className="card">
-      <h1>hello from ohdeer 🦌</h1>
-      <p>You're logged in as <strong>{session.user.email}</strong>.</p>
-      <button onClick={() => signOut()}>Log out</button>
-    </main>
+    <BrowserRouter>
+      <TypesProvider>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route index element={<Navigate to={yearPath(todayParts().year)} replace />} />
+            <Route path="types" element={<TypesView />} />
+            <Route path=":year" element={<YearView />} />
+            <Route path=":year/:month" element={<MonthView />} />
+            <Route path=":year/:month/:day" element={<DayView />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        </Routes>
+      </TypesProvider>
+    </BrowserRouter>
   )
 }
